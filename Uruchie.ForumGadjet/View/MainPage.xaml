@@ -1,4 +1,4 @@
-﻿<Page x:Class="Uruchie.ForumGadjet.View.MainPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ViewModels="clr-namespace:Uruchie.ForumGadjet.ViewModel" xmlns:Converters="clr-namespace:Uruchie.ForumGadjet.Converters" mc:Ignorable="d" Height="330" Width="250" Title="Page1" Background="#FF48895A">
+﻿<Page x:Class="Uruchie.ForumGadjet.View.MainPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ViewModels="clr-namespace:Uruchie.ForumGadjet.ViewModel" xmlns:Converters="clr-namespace:Uruchie.ForumGadjet.Converters" xmlns:Controls="clr-namespace:Uruchie.ForumGadjet.Controls" mc:Ignorable="d" Height="330" Width="250" Title="Page1" Background="#FF48895A">
 	<Page.Resources>
 		<!-- конвертеры :-->
 		<Converters:BooleanToVisibility x:Key="boolToVisibilityConverter" />
@@ -6,7 +6,7 @@
 
         <!-- Шаблон представления сообщения -->
 		<DataTemplate x:Key="PostDataTemplate">
-			<Border x:Name="rootBorder" Width="250" Margin="0" BorderThickness="0,0,0,1" CornerRadius="0" MouseLeftButtonDown="rootBorder_MouseLeftButtonDown" MouseRightButtonDown="rootBorder_MouseRightButtonDown">
+			<Border x:Name="rootBorder" Width="250" Margin="0" BorderThickness="0,0,0,1" CornerRadius="0">
 				<Border.Background>
 					<RadialGradientBrush>
 						<GradientStop Color="#FF48895A" Offset="1" />
@@ -36,9 +36,9 @@
 					<TextBlock Grid.Column="1" Margin="4,-14,0,0" Grid.Row="1" Text="От: " Foreground="#FFBCBCBC" />
 					<TextBlock Grid.Column="1" Margin="4,-12,8,4" Grid.Row="1" FontSize="10" Text="{Binding DateTime, StringFormat={}{0:HH:mm}}" Foreground="#FFB4B4B4" HorizontalAlignment="Right" />
 					<TextBlock Grid.Column="1" Grid.Row="1" Margin="4,-14,37,4" HorizontalAlignment="Right" Foreground="#FFACC0F1" TextDecorations="Underline">
-						<Hyperlink NavigateUri="{Binding PostUrl}" Foreground="#FFACC0F1" RequestNavigate="HyperlinkRequestNavigate">
+						<Controls:HyperlinkControl NavigateUri="{Binding PostUrl}" Foreground="#FFACC0F1">
 							ссылка
-						</Hyperlink>
+						</Controls:HyperlinkControl>
 					</TextBlock>
 				</Grid>
 			</Border>
@@ -79,18 +79,26 @@
 	</Page.DataContext>
 	<Grid>
         <!-- список сообщений -->
-		<ListBox Margin="-3,-1,0,0" x:Name="listbox" BorderThickness="0" Height="333" VerticalAlignment="Top" ItemsSource="{Binding Posts}" SelectedItem="{Binding SelectedPost, Mode=TwoWay}" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemTemplate="{DynamicResource PostDataTemplate}" ItemContainerStyle="{StaticResource ContainerStyle}" />
+		<ListBox Margin="-3,-1,0,0" x:Name="listbox" BorderThickness="0" Height="333" VerticalAlignment="Top" 
+                 ItemsSource="{Binding Posts}" SelectedItem="{Binding SelectedPost, Mode=TwoWay}" Background="Transparent" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False" 
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemTemplate="{DynamicResource PostDataTemplate}" 
+                 ItemContainerStyle="{StaticResource ContainerStyle}" />
 		
         <!-- панелька вывода ошибки -->
-        <Grid VerticalAlignment="Bottom" Height="25" x:Name="errorContainer" Background="#B6000000" Visibility="{Binding IsError, Converter={StaticResource boolToVisibilityConverter}}">
-			<Image Source="..\Assets\error.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="18" Height="18" Margin="4,0,0,0"></Image>
-			<TextBlock Text="Не удалось обновить" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="24,0,0,2" />
+        <Grid VerticalAlignment="Bottom" Height="25" x:Name="errorContainer" Background="#B6000000" 
+              Visibility="{Binding IsError, Converter={StaticResource boolToVisibilityConverter}}">
+			<Image Source="..\Assets\error.png" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                   Width="18" Height="18" Margin="4,0,0,0"></Image>
+			<TextBlock Text="Не удалось обновить" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                       Foreground="White" Margin="24,0,0,2" />
 		</Grid>
         
         <!-- индикатор загрузки -->
 		<Grid Background="#77000000" Visibility="{Binding IsFirstLoading, Converter={StaticResource boolToVisibilityConverter}}">
 			<ProgressBar Height="20" Width="130" IsIndeterminate="True" />
-			<TextBlock Text="Загрузка..." FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-47,0,0" Foreground="#FFEBEBEB" FontSize="18.667">
+			<TextBlock Text="Загрузка..." FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Margin="0,-47,0,0" Foreground="#FFEBEBEB" FontSize="18.667">
 				<TextBlock.Effect>
 					<DropShadowEffect BlurRadius="9" Direction="305" ShadowDepth="0" />
 				</TextBlock.Effect>
@@ -124,23 +132,30 @@
 				<Image Source="{Binding SelectedPost.User.AvatarUrl}" Margin="2" />
 			</Border>
             
-			<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="White" />
+			<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" 
+                       TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="White" />
+            
 			<Border BorderThickness="0" Grid.ColumnSpan="2" Margin="5" Grid.Row="2" Background="White" CornerRadius="6">
 				<ScrollViewer Margin="3">
 					<TextBox BorderThickness="0" Text="{Binding SelectedPost.PageText}" TextWrapping="Wrap" />
 				</ScrollViewer>
 			</Border>
 
-			<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,0,0,3" Text="{Binding SelectedPost.User.UserName}" VerticalAlignment="Top" FontWeight="Bold" Foreground="Gainsboro" />
+			<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,0,0,3" Text="{Binding SelectedPost.User.UserName}" 
+                       VerticalAlignment="Top" FontWeight="Bold" Foreground="Gainsboro" />
 			
             <!-- пейджинг (взад\вперед) -->
-            <Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" Command="{Binding SelectNextPost}" Content="&gt;" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
-			<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" Command="{Binding SelectPreviousPost}" Content="&lt;" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,40,0" />
+            <Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
+                    Command="{Binding SelectNextPost}" Content="&gt;" 
+                    VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
+			<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
+                    Command="{Binding SelectPreviousPost}" Content="&lt;" 
+                    VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,40,0" />
 
 			<TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Foreground="#FFB8C3EF" TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,3">
-				<Hyperlink NavigateUri="{Binding SelectedPost.PostUrl}" RequestNavigate="HyperlinkRequestNavigate" Foreground="#FFB8C3EF">
+				<Controls:HyperlinkControl NavigateUri="{Binding SelectedPost.PostUrl}" Foreground="#FFB8C3EF">
 					<Run Text="ссылка на тему" />
-				</Hyperlink>
+				</Controls:HyperlinkControl>
 			</TextBlock>
 		</Grid>
 
