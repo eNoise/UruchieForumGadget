@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gadget>
+  <name>Uruchie Gadget</name>
+  <namespace>Uruchie.Gadget</namespace>
+  <version>0.4.4</version>
+  <author name="Nagg, Deg">
+    <info url="http://forum.uruchie.org" text="Форум уручья" />
+    <logo src="logo.png" />
+  </author>
+  <copyright>&#169; EgorBo</copyright>
+  <description>Последние сообщения из форума Уручья</description>
+  <icons>
+    <icon height="64" width="64" src="logo.png" />
+  </icons>
+  <hosts>
+    <host name="sidebar">
+      <base type="HTML" apiVersion="1.0.0" src="gadget.html" />
+      <permissions>Full</permissions>
+      <platform minPlatformVersion="1.0" />
+    </host>
+  </hosts>
+</gadget>
