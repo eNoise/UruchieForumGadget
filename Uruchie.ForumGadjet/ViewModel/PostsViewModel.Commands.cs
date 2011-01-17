@@ -1,4 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Markup;
 using Uruchie.ForumGadjet.Helpers.Mvvm;
 
 namespace Uruchie.ForumGadjet.ViewModel
@@ -8,12 +13,25 @@ namespace Uruchie.ForumGadjet.ViewModel
         public RelayCommand SelectNextPost { get; set; }
         public RelayCommand SelectPreviousPost { get; set; }
         public RelayCommand LoadPosts { get; set; }
+        public RelayCommand ReloadResources { get; set; }
 
         public void InitializeCommands()
         {
             LoadPosts = new RelayCommand(() => LoadPostsAsync(configuration.PostLimit));
             SelectNextPost = new RelayCommand(SelectNextPostAction, SelectNextPostCanExecute);
             SelectPreviousPost = new RelayCommand(SelectPreviousPostAction, SelectPreviousPostCanExecute);
+            ReloadResources = new RelayCommand(ReloadResourcesAction);
+
+        }
+
+        private void ReloadResourcesAction()
+        {
+            string path = Path.GetDirectoryName(Assembly.GetAssembly(GetType()).Location);
+            string skinUrl = Path.Combine(path, Path.Combine(CurrentSkin, CurrentSkin + ".xaml"));
+
+            ResourceDictionary dictionary = XamlReader.Load(File.Open(skinUrl, FileMode.Open, FileAccess.Read)) as ResourceDictionary;
+            App.Current.Resources.Clear();
+            App.Current.Resources.MergedDictionaries.Add(dictionary);
         }
 
         private bool SelectNextPostCanExecute()

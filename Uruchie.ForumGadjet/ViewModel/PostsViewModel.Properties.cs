@@ -15,8 +15,7 @@ namespace Uruchie.ForumGadjet.ViewModel
         {
             get { return selectedPost; }
             set
-            {
-                selectedPost = value;
+            {   selectedPost = value;
                 if (value == null)
                     Posts = posts; //update the post list when deselected
                 RaisePropertyChanged("SelectedPost");
@@ -66,5 +65,14 @@ namespace Uruchie.ForumGadjet.ViewModel
             }
         }
 
+        public string CurrentSkin
+        {
+            get { return currentSkin; }
+            set
+            {
+                currentSkin = value;
+                RaisePropertyChanged("CurrentSkin");
+            }
+        }
 	}
 }

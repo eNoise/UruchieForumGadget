@@ -25,12 +25,26 @@ namespace Uruchie.ForumGadjet.Helpers
         /// <summary>
         /// Log an a regular message
         /// </summary>
-        public static void LogMessage(string message, params object[] args)
+        public static void LogDebug(string message, params object[] args)
         {
             if (string.IsNullOrEmpty(urlStatic)) return;
 
             string parameters = string.Format(
                     "module=forum&action=addlogmessage&app=ForumGadget&appversion={0}&logtype=DEBUG&logmessage={1}",
+                    appVersion, string.Format(message, args));
+
+            ThreadPool.QueueUserWorkItem(o => SendPost(parameters));
+        }
+
+        /// <summary>
+        /// Log an a regular message
+        /// </summary>
+        public static void LogInfo(string message, params object[] args)
+        {
+            if (string.IsNullOrEmpty(urlStatic)) return;
+
+            string parameters = string.Format(
+                    "module=forum&action=addlogmessage&app=ForumGadget&appversion={0}&logtype=INFO&logmessage={1}",
                     appVersion, string.Format(message, args));
 
             ThreadPool.QueueUserWorkItem(o => SendPost(parameters));

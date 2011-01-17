@@ -14,12 +14,9 @@ namespace Uruchie.ForumGadjet.View
         public MainPage()
         {
             InitializeComponent();
-            MouseLeave += MainPageMouseLeave;
-        }
-
-        private void MainPageMouseLeave(object sender, MouseEventArgs e)
-        {
-            ((PostsViewModel) DataContext).SelectedPost = null;
+            //deselect post when mouse leaves view
+            //TODO: replace with EventToCommand 
+            MouseLeave += (s,e) => ((PostsViewModel)DataContext).SelectedPost = null; 
         }
     }
 }

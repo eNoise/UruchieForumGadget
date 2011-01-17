@@ -16,6 +16,7 @@ namespace Uruchie.ForumGadjet.ViewModel
     public partial class PostsViewModel : ViewModelBase
     {
         private readonly DispatcherTimer timer;
+        private string currentSkin;
         private Configuration configuration;
         private bool isError;
         private bool isFirstLoading;
@@ -26,6 +27,7 @@ namespace Uruchie.ForumGadjet.ViewModel
 
         public PostsViewModel()
         {
+            CurrentSkin = "DefaultSkin";
             ReloadConfiguration();
             InitializeCommands();
 
@@ -37,7 +39,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             if (IsInDesignMode)
                 return;
 
-            Logger.LogMessage(string.Format("[Started at {0}. Installed .NET versions: {1};]",
+            Logger.LogDebug(string.Format("[Started at {0}. Installed .NET versions: {1};]",
                                             DateTime.Now, SystemInfoHelper.GetInstalledDotNetVersions()));
 
             //таймер
@@ -66,8 +68,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             // filter is for loading of only necessary fields (reduces traffic)
             postsQuery = string.Format("module=forum&action=lastmessages&limit={0}&filter={1}",
                                        configuration.PostLimit,
-                                       ReflectionHelper.GetActiveDataMembers(typeof (Post), typeof (User),
-                                                                             typeof (Thread)));
+                                       ReflectionHelper.GetActiveDataMembers(typeof (Post), typeof (User), typeof (Thread)));
         }
 
         private void TimerTick(object sender, EventArgs e)

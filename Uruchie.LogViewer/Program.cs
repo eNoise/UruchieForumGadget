@@ -13,7 +13,7 @@ namespace Uruchie.LogViewer
     {
         static void Main(string[] args)
         {
-            UruchieForumService.LoadDataAsync<LogInfo>("http://uruchie.org/api.php", "module=forum&action=getlogmessage&app=ForumGadget&logtype=DEBUG&filter=message", Loaded);
+            UruchieForumService.LoadDataAsync<LogInfo>("http://uruchie.org/api.php", "module=forum&action=getlogmessage&app=ForumGadget", Loaded);
             Console.ReadKey();
         }
 
@@ -22,7 +22,8 @@ namespace Uruchie.LogViewer
             string file = "C:\\syslog.txt";
             if (File.Exists(file))
                 File.Delete(file);
-            File.WriteAllLines(file, obj.Result.Messages.Select(i => i.Message).ToArray());
+            File.WriteAllLines(file, obj.Result.Messages.OrderBy(i => i.IpAddress).Select(i =>
+                string.Format("[{1}][{0}][{2}]", i.MessageType, i.IpAddress, i.Message)).ToArray());
             foreach (var item in obj.Result.Messages)
             {
                 Console.WriteLine(item);
