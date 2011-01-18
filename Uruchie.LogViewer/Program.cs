@@ -13,7 +13,7 @@ namespace Uruchie.LogViewer
     {
         static void Main(string[] args)
         {
-            UruchieForumService.LoadDataAsync<LogInfo>("http://uruchie.org/api.php", "module=forum&action=getlogmessage&app=ForumGadget", Loaded);
+            UruchieForumService.LoadDataAsync<LogInfo>("http://uruchie.org/api.php", "module=forum&action=getlogmessage&app=ForumGadget&limit=100", Loaded);
             Console.ReadKey();
         }
 

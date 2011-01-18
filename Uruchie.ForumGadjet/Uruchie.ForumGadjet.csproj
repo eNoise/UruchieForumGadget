@@ -91,6 +91,7 @@
     <Compile Include="Helpers\SystemInfoHelper.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Settings\ConfigurationManager.cs" />
+    <Compile Include="Skins\SkinManager.cs" />
     <Compile Include="ViewModel\PostsViewModel.Commands.cs" />
     <Compile Include="ViewModel\PostsViewModel.cs" />
     <Compile Include="App.xaml.cs">
@@ -158,6 +159,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Skins\CompactSkin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
     <Page Include="Skins\SilverSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

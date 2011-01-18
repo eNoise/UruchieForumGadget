@@ -7,6 +7,7 @@ using Uruchie.ForumGadjet.Helpers.Mvvm;
 using Uruchie.ForumGadjet.Model;
 using Uruchie.ForumGadjet.Service;
 using Uruchie.ForumGadjet.Settings;
+using Uruchie.ForumGadjet.Skins;
 
 namespace Uruchie.ForumGadjet.ViewModel
 {
@@ -27,7 +28,6 @@ namespace Uruchie.ForumGadjet.ViewModel
 
         public PostsViewModel()
         {
-            CurrentSkin = "DefaultSkin";
             ReloadConfiguration();
             InitializeCommands();
 
@@ -39,6 +39,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             if (IsInDesignMode)
                 return;
 
+            CurrentSkin = SkinManager.DefaultSkin;
             Logger.LogDebug(string.Format("[Started at {0}. Installed .NET versions: {1};]",
                                             DateTime.Now, SystemInfoHelper.GetInstalledDotNetVersions()));
 
@@ -56,7 +57,7 @@ namespace Uruchie.ForumGadjet.ViewModel
         {
             if (IsInDesignMode)
             {
-                postsQuery = "module=forum&action=lastmessages&limit=10";
+                postsQuery = "module=forum&action=lastmessages&limit=20";
                 configuration = ConfigurationManager.Load();
                 return;
             }

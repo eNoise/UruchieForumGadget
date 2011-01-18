@@ -9,7 +9,7 @@
                        {
                            ApiUrl = "http://uruchie.org/api.php",
                            ForumUrl = "forum.uruchie.org",
-                           PostLimit = 10,
+                           PostLimit = 20,
                            RefreshInterval = 15
                        };
         }

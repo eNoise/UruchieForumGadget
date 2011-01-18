@@ -8,21 +8,12 @@
 
     <!-- Шаблон представления сообщения -->
     <DataTemplate x:Key="PostDataTemplate">
-        <Border x:Name="rootBorder" Width="250" Margin="0" BorderThickness="0,0,0,1" CornerRadius="0" BorderBrush="White">
+        <Border x:Name="rootBorder" Width="250" Margin="0" BorderThickness="0" CornerRadius="0" BorderBrush="White">
             <Border.Background>
         		<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-        			<LinearGradientBrush.RelativeTransform>
-        				<TransformGroup>
-        					<ScaleTransform CenterY="0.5" CenterX="0.9" ScaleX="1.3"/>
-        					<SkewTransform CenterY="0.5" CenterX="0.9"/>
-        					<RotateTransform Angle="-76" CenterY="0.5" CenterX="0.9"/>
-        					<TranslateTransform/>
-        				</TransformGroup>
-        			</LinearGradientBrush.RelativeTransform>
-        			<GradientStop Color="#FF778B9D" Offset="0.994"/>
-        			<GradientStop Color="#FEE4E4E4" Offset="0.016"/>
-        			<GradientStop Color="#FE7DA3C4" Offset="0.558"/>
-        			<GradientStop Color="#FEC8D2DB" Offset="0.16"/>
+        			<GradientStop Color="#FF020202" Offset="1"/>
+        			<GradientStop Color="#FE636463" Offset="0.01"/>
+        			<GradientStop Color="#FE4C6250" Offset="0.077"/>
         		</LinearGradientBrush>
         	</Border.Background>
             <Grid Background="Transparent">
@@ -31,16 +22,15 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="28" />
-                    <RowDefinition Height="4" />
+                    <RowDefinition Height="18.4" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="1" Text="{Binding Thread.Title}" Margin="4,1" FontSize="10.667" Foreground="Black" Background="#00140D23" TextTrimming="CharacterEllipsis" FontStyle="Normal" FontWeight="Bold" />
+                <StackPanel Grid.Column="1" Margin="4,0" Orientation="Horizontal" d:LayoutOverrides="Height">
+					<TextBlock Grid.Column="1" Margin="0" Grid.Row="1" Text="{Binding User.UserName}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Foreground="#FFFEFF6F"/>
+					<TextBlock Grid.Column="1" Margin="0" Grid.Row="1" Text=": " FontWeight="Bold" TextTrimming="CharacterEllipsis" Foreground="#FFFFED78"/>
+            		<TextBlock Text="{Binding Thread.Title}" Margin="0" FontSize="12" Foreground="White" Background="#00140D23" TextTrimming="CharacterEllipsis" FontStyle="Normal" Height="26" />
 
-                <TextBlock Grid.Column="1" Margin="25,-14,0,3" Grid.Row="1" Text="{Binding User.UserName}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Foreground="#FF5DB83D"/>
-                <TextBlock Grid.Column="1" Margin="4,-14,0,0" Grid.Row="1" Text="От: " Foreground="#FF626262" />
-                <TextBlock Grid.Column="1" Margin="4,-12,8,4" Grid.Row="1" FontSize="10" Text="{Binding DateTime, StringFormat=\{0:HH:mm\}}" Foreground="#FF3D3C45" HorizontalAlignment="Right" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Margin="4,-14,37,4" HorizontalAlignment="Right" Foreground="#FF161C2B" TextDecorations="Underline"><Controls:HyperlinkControl NavigateUri="{Binding PostUrl}"><Run Text="ссылка"/></Controls:HyperlinkControl></TextBlock>
+            	</StackPanel>
             </Grid>
         </Border>
 
@@ -103,21 +93,20 @@
             </Grid>
 
             <!-- форма просмотра текста сообщения -->
-            <Grid x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}">
+            <Grid x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}" d:IsHidden="True">
                 <Grid.Background>
-            		<RadialGradientBrush>
-            			<GradientStop Color="#FF3A73C0" Offset="0"/>
-            			<GradientStop Color="#FFACCFFF" Offset="1"/>
-            			<GradientStop Color="#FF5F7189" Offset="0.401"/>
-            		</RadialGradientBrush>
-            	</Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                        <GradientStop Color="#FF666666" Offset="0" />
+                        <GradientStop Color="#FF292929" Offset="0.249" />
+                        <GradientStop Color="#FF5D5E5D" Offset="0.131" />
+                    </LinearGradientBrush>
+                </Grid.Background>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="80" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40" />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="60" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
@@ -125,12 +114,12 @@
                 <Rectangle Grid.Row="1" Fill="White" Width="60" Height="30" Margin="0,0,0,-30" />
 
                 <!--аватар, пока грузим по ссылке-->
-                <Border BorderThickness="0" Margin="5" Grid.RowSpan="2" Background="White" CornerRadius="3">
+                <Border BorderThickness="0" Margin="5,5,5,0" Background="White" CornerRadius="3">
                     <Image Source="{Binding SelectedPost.User.AvatarUrl}" Margin="2" />
                 </Border>
 
-                <TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" 
-                       TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="Black" />
+                <!--TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" 
+                       TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="White" /-->
 
                 <Border BorderThickness="0" Grid.ColumnSpan="2" Margin="5" Grid.Row="2" Background="White" CornerRadius="6">
                     <ScrollViewer Margin="3">
@@ -138,18 +127,28 @@
                     </ScrollViewer>
                 </Border>
 
-                <TextBlock Grid.Column="1" Grid.Row="1" Margin="0,0,0,3" Text="{Binding SelectedPost.User.UserName}" 
-                       VerticalAlignment="Top" FontWeight="Bold" Foreground="White" FontSize="13.333" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Margin="0,0,0,3" Text="{Binding SelectedPost.User.UserName}" 
+                       VerticalAlignment="Top" FontWeight="Bold" Foreground="White" FontSize="16" />
 
+                <TextBlock Grid.Column="1" Grid.Row="0" Margin="0,25.28,0,15.213" Text="{Binding SelectedPost.DateTime, StringFormat={}{0:HH:mm}}" 
+                       VerticalAlignment="Stretch" FontWeight="Normal" Foreground="#FFE2E2E2" FontSize="12" HorizontalAlignment="Left" d:LayoutOverrides="Height" />
+					   
+					   
                 <!-- пейджинг (взад\вперед) -->
-                <Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
+                <Button Grid.Column="1" Grid.Row="0" Height="20" Width="20" 
                     Command="{Binding SelectNextPost}" Content="&gt;" 
                     VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
-                <Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
+                <Button Grid.Column="1" Grid.Row="0" Height="20" Width="20" 
                     Command="{Binding SelectPreviousPost}" Content="&lt;" 
                     VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,40,0" />
 
-                <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Foreground="#FFB8C3EF" TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,3"><Controls:HyperlinkControl NavigateUri="{Binding SelectedPost.PostUrl}" Foreground="#FFB8C3EF"><Run Text="ссылка на тему" /></Controls:HyperlinkControl></TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Foreground="White" 
+					TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,3">
+                	<Controls:HyperlinkControl NavigateUri="{Binding SelectedPost.PostUrl}" Foreground="White">
+                		<Run Text="ссылка на тему" />
+					</Controls:HyperlinkControl>
+				</TextBlock>
+				
             </Grid>
 
         </Grid>

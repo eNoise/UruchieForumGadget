@@ -71,6 +71,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             set
             {
                 currentSkin = value;
+                ReloadResourcesAction();
                 RaisePropertyChanged("CurrentSkin");
             }
         }
