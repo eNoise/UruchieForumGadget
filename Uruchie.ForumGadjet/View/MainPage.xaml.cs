@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Navigation;
 using Uruchie.ForumGadjet.ViewModel;
 
 namespace Uruchie.ForumGadjet.View
@@ -16,7 +13,7 @@ namespace Uruchie.ForumGadjet.View
             InitializeComponent();
             //deselect post when mouse leaves view
             //TODO: replace with EventToCommand 
-            MouseLeave += (s,e) => ((PostsViewModel)DataContext).SelectedPost = null; 
+            MouseLeave += (s, e) => ((PostsViewModel) DataContext).SelectedPost = null;
         }
     }
 }

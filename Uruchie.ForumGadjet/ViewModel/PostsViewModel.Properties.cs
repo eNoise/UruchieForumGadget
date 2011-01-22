@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Uruchie.ForumGadjet.Model;
 
 namespace Uruchie.ForumGadjet.ViewModel
 {
     partial class PostsViewModel
-	{
+    {
         /// <summary>
         /// Выделенный пост
         /// </summary>
@@ -15,10 +12,12 @@ namespace Uruchie.ForumGadjet.ViewModel
         {
             get { return selectedPost; }
             set
-            {   selectedPost = value;
+            {
+                selectedPost = value;
                 if (value == null)
                     Posts = posts; //update the post list when deselected
                 RaisePropertyChanged("SelectedPost");
+                RaisePropertyChanged("TextAsFlowDocument"); //external linked property
             }
         }
 
@@ -75,5 +74,5 @@ namespace Uruchie.ForumGadjet.ViewModel
                 RaisePropertyChanged("CurrentSkin");
             }
         }
-	}
+    }
 }

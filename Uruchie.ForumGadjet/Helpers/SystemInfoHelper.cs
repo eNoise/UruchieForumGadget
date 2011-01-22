@@ -4,7 +4,7 @@ namespace Uruchie.ForumGadjet.Helpers
 {
     public class SystemInfoHelper
     {
-        // код взять отсюда: http://social.msdn.microsoft.com/Forums/en/csharpgeneral/thread/22930fed-4681-4079-a683-85f1ee0d6731
+        // код взят отсюда: http://social.msdn.microsoft.com/Forums/en/csharpgeneral/thread/22930fed-4681-4079-a683-85f1ee0d6731
         public static string GetInstalledDotNetVersions()
         {
             string versions = "";
@@ -22,7 +22,7 @@ namespace Uruchie.ForumGadjet.Helpers
                     {
                         // Let's try to get any version information that's available
                         version = (string) key.GetValue("Version");
-                        versions += (version ?? "") +"; ";
+                        versions += (version ?? "") + "; ";
                     }
                 }
             }

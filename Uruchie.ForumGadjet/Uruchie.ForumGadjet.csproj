@@ -22,6 +22,8 @@
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>True</SignManifests>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.20901.0</ExpressionBlendVersion>
     <PublishUrl>D:\Projects\UruchieForumGadget\Bin\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,7 +35,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>25</ApplicationRevision>
-    <ApplicationVersion>0.5.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>false</BootstrapperEnabled>
@@ -42,7 +44,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -69,29 +71,43 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\BindableFlowDocument.cs" />
     <Compile Include="Controls\HyperlinkControl.cs" />
+    <Compile Include="Converters\BbCodesToHtmlConverter.cs" />
     <Compile Include="Converters\BooleanToVisibility.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlCssParser.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlFromXamlConverter.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlLexicalAnalyzer.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlParser.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlSchema.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlTokenType.cs" />
+    <Compile Include="Converters\HtmlToXamlConvertor\HtmlToXamlConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\IsNullToHiddenConverter.cs" />
     <Compile Include="Converters\NotOperatorConverter.cs" />
     <Compile Include="DataProcessor.cs" />
+    <Compile Include="Converters\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="Helpers\CommonHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\HttpHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Model\LogInfo.cs" />
     <Compile Include="Model\LogMessage.cs" />
+    <Compile Include="Model\LogType.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\Thread.cs" />
     <Compile Include="Helpers\SystemInfoHelper.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Settings\ConfigurationManager.cs" />
     <Compile Include="Skins\SkinManager.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\PostsViewModel.Commands.cs" />
     <Compile Include="ViewModel\PostsViewModel.cs" />
     <Compile Include="App.xaml.cs">
@@ -159,19 +175,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Skins\CompactSkin.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Skins\SilverSkin.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Page>
     <Page Include="Skins\DefaultSkin.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Include="View\MainPage.xaml">
@@ -183,12 +189,20 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\refresh.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\error.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\fakeava.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\config.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\gear.png" />
   </ItemGroup>
   <PropertyGroup>
     <StartArguments />

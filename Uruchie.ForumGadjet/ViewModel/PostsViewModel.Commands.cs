@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Markup;
 using Uruchie.ForumGadjet.Helpers.Mvvm;
+using Uruchie.ForumGadjet.View;
 
 namespace Uruchie.ForumGadjet.ViewModel
 {
@@ -14,14 +14,21 @@ namespace Uruchie.ForumGadjet.ViewModel
         public RelayCommand SelectPreviousPost { get; set; }
         public RelayCommand LoadPosts { get; set; }
         public RelayCommand ReloadResources { get; set; }
+        public RelayCommand DisplaySettings { get; set; }
 
         public void InitializeCommands()
         {
-            LoadPosts = new RelayCommand(() => LoadPostsAsync(configuration.PostLimit));
+            LoadPosts = new RelayCommand(LoadPostsAsync);
             SelectNextPost = new RelayCommand(SelectNextPostAction, SelectNextPostCanExecute);
             SelectPreviousPost = new RelayCommand(SelectPreviousPostAction, SelectPreviousPostCanExecute);
             ReloadResources = new RelayCommand(ReloadResourcesAction);
+            DisplaySettings = new RelayCommand(DisplaySettingsAction);
+        }
 
+        private void DisplaySettingsAction()
+        {
+            var dlg = new SettingsView();
+            dlg.ShowDialog();
         }
 
         private void ReloadResourcesAction()
@@ -29,9 +36,9 @@ namespace Uruchie.ForumGadjet.ViewModel
             string path = Path.GetDirectoryName(Assembly.GetAssembly(GetType()).Location);
             string skinUrl = Path.Combine(path, Path.Combine(CurrentSkin, CurrentSkin + ".xaml"));
 
-            ResourceDictionary dictionary = XamlReader.Load(File.Open(skinUrl, FileMode.Open, FileAccess.Read)) as ResourceDictionary;
-            App.Current.Resources.Clear();
-            App.Current.Resources.MergedDictionaries.Add(dictionary);
+            var dictionary = XamlReader.Load(File.Open(skinUrl, FileMode.Open, FileAccess.Read)) as ResourceDictionary;
+            Application.Current.Resources.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
         }
 
         private bool SelectNextPostCanExecute()

@@ -20,5 +20,8 @@ namespace Uruchie.ForumGadjet.Settings
 
         [ConfigurationProperty("RefreshInterval", DefaultValue = "http://uruchie.org/api.php")]
         public string ApiUrl { get; set; }
+
+        [ConfigurationProperty("Skin", DefaultValue = "DefaultSkin")]
+        public string Skin { get; set; }
     }
 }

@@ -7,7 +7,6 @@ using Uruchie.ForumGadjet.Helpers.Mvvm;
 using Uruchie.ForumGadjet.Model;
 using Uruchie.ForumGadjet.Service;
 using Uruchie.ForumGadjet.Settings;
-using Uruchie.ForumGadjet.Skins;
 
 namespace Uruchie.ForumGadjet.ViewModel
 {
@@ -17,12 +16,11 @@ namespace Uruchie.ForumGadjet.ViewModel
     public partial class PostsViewModel : ViewModelBase
     {
         private readonly DispatcherTimer timer;
-        private string currentSkin;
         private Configuration configuration;
+        private string currentSkin;
         private bool isError;
         private bool isFirstLoading;
         private List<Post> posts;
-        private string postsQuery;
         private Post selectedPost;
 
 
@@ -34,14 +32,12 @@ namespace Uruchie.ForumGadjet.ViewModel
             if (!IsInDesignMode)
                 IsFirstLoading = true;
 
-            LoadPostsAsync(configuration.PostLimit);
+            LoadPostsAsync();
 
             if (IsInDesignMode)
                 return;
 
-            CurrentSkin = SkinManager.DefaultSkin;
-            Logger.LogDebug(string.Format("[Started at {0}. Installed .NET versions: {1};]",
-                                            DateTime.Now, SystemInfoHelper.GetInstalledDotNetVersions()));
+            Logger.LogSystemInformation();
 
             //таймер
             timer = new DispatcherTimer();
@@ -49,46 +45,37 @@ namespace Uruchie.ForumGadjet.ViewModel
             timer.Tick += TimerTick;
             timer.Start();
         }
-        
+
         /// <summary>
         /// Обновить конфигурацию
         /// </summary>
         public void ReloadConfiguration()
         {
-            if (IsInDesignMode)
-            {
-                postsQuery = "module=forum&action=lastmessages&limit=20";
-                configuration = ConfigurationManager.Load();
-                return;
-            }
-
-
-            configuration = ConfigurationManager.Load();
-            Logger.RegisterUrl(configuration.ApiUrl);
-
-            // filter is for loading of only necessary fields (reduces traffic)
-            postsQuery = string.Format("module=forum&action=lastmessages&limit={0}&filter={1}",
-                                       configuration.PostLimit,
-                                       ReflectionHelper.GetActiveDataMembers(typeof (Post), typeof (User), typeof (Thread)));
+            ConfigurationManager.Reload();
+            configuration = ConfigurationManager.CurrentConfiguration;
         }
 
         private void TimerTick(object sender, EventArgs e)
         {
-            LoadPostsAsync(configuration.PostLimit);
+            timer.Interval = TimeSpan.FromSeconds(ConfigurationManager.CurrentConfiguration.RefreshInterval);
+            LoadPostsAsync();
         }
 
         /// <summary>
         /// Загрузить сообщения ассинхронно
         /// </summary>
-        public void LoadPostsAsync(int maxPostCount)
+        public void LoadPostsAsync()
         {
-            IsError = false;
+            if (IsBusy)
+                return;
+
             IsBusy = true;
-            UruchieForumService.LoadDataAsync<LastMessages>(configuration.ApiUrl, postsQuery, Loaded);
+            UruchieForumService.LoadLastPostsAsync(Loaded);
         }
 
         private void Loaded(OperationCompletedEventArgs<LastMessages> obj)
         {
+            IsBusy = false;
             if (IsFirstLoading)
                 IsFirstLoading = false;
 
@@ -96,6 +83,7 @@ namespace Uruchie.ForumGadjet.ViewModel
                 try
                 {
                     posts = DataProcessor.PreparePosts(obj.Result.Posts, configuration).ToList();
+                    IsError = false;
                 }
                 catch (Exception exc)
                 {
@@ -110,8 +98,6 @@ namespace Uruchie.ForumGadjet.ViewModel
 
             if (SelectedPost == null)
                 Posts = posts; //update only when there is no selected item
-
-            IsBusy = false;
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 
@@ -12,7 +8,7 @@ namespace Uruchie.ForumGadjet.Controls
     {
         public HyperlinkControl()
         {
-            this.RequestNavigate += HyperlinkControlRequestNavigate;
+            RequestNavigate += HyperlinkControlRequestNavigate;
         }
 
         private static void HyperlinkControlRequestNavigate(object sender, RequestNavigateEventArgs e)

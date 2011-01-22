@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Uruchie.ForumGadjet.Helpers;
 using Uruchie.ForumGadjet.Model;
 using Uruchie.ForumGadjet.Settings;
@@ -16,11 +15,6 @@ namespace Uruchie.ForumGadjet
                 // 1. remove empty posts:
                 if (string.IsNullOrEmpty(post.PageText))
                     continue;
-
-                // 2. cut bb-codes:
-                // 2.1. totally remove quotes
-                //post.PageText = Regex.Replace(post.PageText, @"\[(.*?)\]", String.Empty, RegexOptions.IgnoreCase);
-                post.PageText = Regex.Replace(post.PageText, @"\[(.*?)\]", String.Empty, RegexOptions.IgnoreCase);
 
                 // 3. prepare calculated fields:
                 post.PostUrl = string.Format("http://{0}/showthread.php?threadid={1}&p={2}&viewfull=1#post{2}",

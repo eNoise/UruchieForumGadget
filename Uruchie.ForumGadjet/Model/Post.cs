@@ -37,5 +37,10 @@ namespace Uruchie.ForumGadjet.Model
                 return false;
             return PostId.Equals(((Post) obj).PostId);
         }
+
+        public override int GetHashCode()
+        {
+            return PostId.GetHashCode();
+        }
     }
 }
