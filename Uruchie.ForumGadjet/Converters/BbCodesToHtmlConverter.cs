@@ -3,6 +3,9 @@ using Uruchie.ForumGadjet.Helpers;
 
 namespace Uruchie.ForumGadjet.Converters
 {
+    /// <summary>
+    /// TODO: needs refactoring!
+    /// </summary>
     public static class BbCodesToHtmlConverter
     {
         public static string BbCodesToHtml(string text)

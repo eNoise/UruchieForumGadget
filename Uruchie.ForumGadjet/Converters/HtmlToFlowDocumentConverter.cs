@@ -7,6 +7,9 @@ using Uruchie.ForumGadjet.Helpers;
 
 namespace Uruchie.ForumGadjet.Converters
 {
+    /// <summary>
+    /// TODO: needs refactoring!
+    /// </summary>
     public class HtmlToFlowDocumentConverter
     {
         public static Section Convert(string value)
