@@ -11,6 +11,7 @@ namespace Uruchie.ForumGadjet.ViewModel
         private int refreshInterval;
         private string selectedSkin;
         private string[] skins;
+        private readonly bool isInitializing = true;
 
         public SettingsViewModel()
         {
@@ -20,6 +21,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             //copy settings:
             RefreshInterval = ConfigurationManager.CurrentConfiguration.RefreshInterval;
             SelectedSkin = previousSkin = ConfigurationManager.CurrentConfiguration.Skin;
+            isInitializing = false;
         }
 
         public RelayCommand ApplyChangesCommand { get; set; }
@@ -51,7 +53,8 @@ namespace Uruchie.ForumGadjet.ViewModel
             {
                 selectedSkin = value;
                 RaisePropertyChanged("SelectedSkin");
-                SkinManager.ChangeSkin(value);
+                if (!isInitializing)
+                    SkinManager.ChangeSkin(value);
             }
         }
 

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0"?>
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PostLimit>10</PostLimit> <!--1..100-->
+  <RefreshInterval>60</RefreshInterval> <!--10..1000-->
+  <NewPostsAreAtTheTop>false</NewPostsAreAtTheTop>
+  <ForumUrl>forum.uruchie.org</ForumUrl>
+  <ApiUrl>http://uruchie.org/api.php</ApiUrl>
+  <Skin>DefaultSkin</Skin>
+</Configuration>

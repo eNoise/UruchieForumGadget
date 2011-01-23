@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Markup;
+using Uruchie.ForumGadjet.Helpers;
 
 namespace Uruchie.ForumGadjet.Skins
 {
@@ -22,7 +25,7 @@ namespace Uruchie.ForumGadjet.Skins
         {
             try
             {
-                string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string dir = CommonHelper.GetInstallationFolder();
                 string skinDir = Path.Combine(dir, "Skins");
                 List<string> skinDirectories = Directory.GetDirectories(skinDir).ToList();
                 foreach (string skinDirectory in skinDirectories)
@@ -33,8 +36,9 @@ namespace Uruchie.ForumGadjet.Skins
                 }
                 return skinDirectories.Select(Path.GetFileName).ToArray();
             }
-            catch
+            catch(Exception exc)
             {
+                Logger.LogError(exc, "GetSkins() error");
                 return new[] {DefaultSkin};
             }
         }
@@ -42,11 +46,14 @@ namespace Uruchie.ForumGadjet.Skins
         /// <summary>
         /// Apply skin
         /// </summary>
-        public static void ChangeSkin(string skinName)
+        public static bool ChangeSkin(string skinName)
         {
             try
             {
-                string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof (SkinManager)).Location);
+                if (string.IsNullOrEmpty(skinName))
+                    throw new ArgumentException();
+
+                string path = CommonHelper.GetInstallationFolder();
                 string skinUrl = Path.Combine(Path.Combine(path, SkinsDirectory),
                                               Path.Combine(skinName, skinName + ".xaml"));
 
@@ -54,9 +61,18 @@ namespace Uruchie.ForumGadjet.Skins
                     XamlReader.Load(File.Open(skinUrl, FileMode.Open, FileAccess.Read)) as ResourceDictionary;
                 Application.Current.Resources.Clear();
                 Application.Current.Resources.MergedDictionaries.Add(dictionary);
+                return true;
             }
-            catch
+            catch (Exception exc)
             {
+                Application.Current.Resources.Clear();
+                Application.Current.Resources.MergedDictionaries.Add(
+                    new ResourceDictionary
+                        {
+                            Source = new Uri(@"pack://application:,,,/Uruchie.ForumGadjet;component/Skins/DefaultSkin.xaml")
+                        });
+
+                return false;
             }
         }
     }

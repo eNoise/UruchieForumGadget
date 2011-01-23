@@ -2,7 +2,7 @@
 <gadget>
   <name>Uruchie Gadget</name>
   <namespace>Uruchie.Gadget</namespace>
-  <version>0.5</version>
+  <version>1.0.0</version>
   <author name="Nagg, Deg">
     <info url="http://forum.uruchie.org" text="Форум уручья" />
     <logo src="logo.png" />

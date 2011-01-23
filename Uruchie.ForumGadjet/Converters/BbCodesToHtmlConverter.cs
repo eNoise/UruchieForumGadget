@@ -17,9 +17,20 @@ namespace Uruchie.ForumGadjet.Converters
                 text = text.Replace("[" + tag + "]", "<" + tag + ">").Replace("[/" + tag + "]", "</" + tag + ">");
 
             CommonHelper.Try(() => text = ReplaceParamaterizedTag(text, "color", "font", a => string.Format("<font color={0}>", a)));
+            CommonHelper.Try(() => text = ReplaceParamaterizedTag(text, "font", "font", a => string.Format("<font face={0}>", a)));
             CommonHelper.Try(() => text = ReplaceParamaterizedTag(text, "size", "font", a => string.Format("<font size={0}>", a)));
             CommonHelper.Try(() => text = ReplaceParamaterizedTag(text, "url", "a", a => string.Format("<a href={0}>", a)));
             CommonHelper.Try(() => text = ReplaceParamaterizedTag(text, "quote", "font", a => string.Format("<font color=lightgray>")));
+
+            text = text.Replace("[CENTER]", "").Replace("[/CENTER]", "");
+
+            if (text.Contains("[SPOILER") && text.Contains("[/SPOILER]"))
+                CommonHelper.Try(() =>
+                                     {
+                                         int pos = 0;
+                                         text = text.Remove(pos = text.IndexOf("[SPOILER"),
+                                                            text.LastIndexOf("[/SPOILER]") - pos + 10);
+                                     });
 
             return text;
         }
@@ -31,7 +42,7 @@ namespace Uruchie.ForumGadjet.Converters
                                                       Func<string, string> replaceWith)
         {
             int colortagIndex = 0;
-            while ((colortagIndex = text.IndexOf("[" + bbTag.ToLower() + "=", 
+            while ((colortagIndex = text.IndexOf("[" + bbTag.ToLower(), 
                 colortagIndex, StringComparison.InvariantCultureIgnoreCase)) > -1)
             {
                 int endTokenPosition = text.IndexOf(']', colortagIndex);
@@ -39,7 +50,15 @@ namespace Uruchie.ForumGadjet.Converters
                     break;
 
                 string tag = text.Substring(colortagIndex, endTokenPosition - colortagIndex + 1);
-                string argument = tag.Remove(0, tag.IndexOf("=") + 1).Replace("]", "");
+
+                string argument = string.Empty;
+                if (tag.Contains("="))
+                    argument = tag.Remove(0, tag.IndexOf("=") + 1).Replace("]", "");
+                else
+                    argument = text.Substring(endTokenPosition + 1, text.IndexOf("[/" + bbTag + "]", endTokenPosition, StringComparison.CurrentCultureIgnoreCase) - endTokenPosition - 1);
+
+
+
                 text = text.Replace(tag, replaceWith(argument));
             }
 

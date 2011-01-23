@@ -14,18 +14,18 @@ namespace Uruchie.ForumGadjet.Service
 {
     public class UruchieForumService
     {
-        private static readonly string appVersion;
+        public static  string AppVersion { get; private set; }
         private static readonly string lastMessageFields;
 
         static UruchieForumService()
         {
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                appVersion = "DesignTime";
+                AppVersion = "DesignTime";
                 lastMessageFields = "";
             }
 
-            appVersion = Assembly.GetAssembly(typeof (Logger)).GetName().Version.ToString(4);
+            AppVersion = Assembly.GetAssembly(typeof (Logger)).GetName().Version.ToString(4);
             lastMessageFields = ReflectionHelper.GetActiveDataMembers(typeof (Post), typeof (User), typeof (Thread));
         }
 
@@ -92,7 +92,7 @@ namespace Uruchie.ForumGadjet.Service
 
             string parameters = string.Format(
                 "module=forum&action=addlogmessage&app=ForumGadget&appversion={0}&logtype={1}&logmessage={2}",
-                appVersion, logtype, message);
+                AppVersion, logtype, message);
             LoadDataAsync<LogInfo>(ConfigurationManager.CurrentConfiguration.ApiUrl, parameters, null);
         }
 

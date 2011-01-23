@@ -98,7 +98,7 @@
 			</Grid.RowDefinitions>
 			
 			<!--TODO: заменить байндингом на версию вместо статической строки-->
-			<TextBlock Text="ForumGadget v.1.0" Margin="3,0,0,0" VerticalAlignment="Center" Foreground="#FFADADAD" />
+			<TextBlock Text="ForumGadget v.1.0 RC" Margin="3,0,0,0" VerticalAlignment="Center" Foreground="#FFADADAD" />
 
 
 			<!--показывается в верхнем правом углу, когда идет загрузка-->
@@ -107,11 +107,11 @@
 
 			<Button HorizontalAlignment="Right" Margin="1,1,20,1" Command="{Binding LoadPosts}" Template="{DynamicResource MenuButtonTemplate}" Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, 
                     ConverterParameter=False}">
-				<Image Source="..\Assets\refresh.png" />
+                <Image Source="pack://application:,,,/Uruchie.ForumGadjet;component/Assets/refresh.png" />
 			</Button>
 
 			<Button HorizontalAlignment="Right" Command="{Binding DisplaySettings}" Template="{DynamicResource MenuButtonTemplate}">
-				<Image Source="..\Assets\gear.png" />
+                <Image Source="pack://application:,,,/Uruchie.ForumGadjet;component/Assets/gear.png" />
 			</Button>
 
 			<!-- список сообщений -->
@@ -119,7 +119,7 @@
 
 			<!-- панелька вывода ошибки -->
 			<Grid Grid.RowSpan="2" VerticalAlignment="Bottom" Height="25" x:Name="errorContainer" Background="#B6000000" Visibility="{Binding IsError, Converter={StaticResource boolToVisibilityConverter}}">
-				<Image Source="..\Assets\error.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="18" Height="18" Margin="4,0,0,0" />
+                <Image Source="pack://application:,,,/Uruchie.ForumGadjet;component/Assets/error.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="18" Height="18" Margin="4,0,0,0" />
 				<TextBlock Text="Не удалось обновить" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="24,0,0,2" />
 			</Grid>
 
@@ -134,16 +134,9 @@
 			</Grid>
 
 			<!-- форма просмотра текста сообщения -->
-			<Grid Grid.RowSpan="2" x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}">
-				<Grid.Background>
-					<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-						<GradientStop Color="#FFEFEFEF" Offset="0" />
-						<GradientStop Color="#FFD6D6D6" Offset="0.249" />
-						<GradientStop Color="#FFEBEBEB" Offset="0.131" />
-					</LinearGradientBrush>
-				</Grid.Background>
+			<Grid Grid.RowSpan="2" x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}" Background="#95000000">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="70" />
+					<ColumnDefinition Width="84" />
 					<ColumnDefinition />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
@@ -153,27 +146,27 @@
 				</Grid.RowDefinitions>
 
 				<!--связал блок аватара и блок текста -->
-				<Rectangle Grid.Row="1" Fill="White" Width="60" Height="30" Margin="0,0,0,-30" />
+				<Rectangle Grid.Row="1" Fill="White" Width="Auto" Height="30" Margin="5,20,5,-10" />
 
 				<!--аватар, пока грузим по ссылке-->
 				<Border BorderThickness="0" Margin="5" Grid.RowSpan="2" Background="White" CornerRadius="3">
 					<Image Source="{Binding SelectedPost.User.AvatarUrl}" Margin="2" />
 				</Border>
 
-				<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="#FF33812D" LineStackingStrategy="BlockLineHeight" LineHeight="12" Margin="0,4,5,0" />
+				<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="#FFACFFC0" LineStackingStrategy="BlockLineHeight" LineHeight="12" Margin="0,4,5,0" />
 
 				<Border BorderThickness="0" Grid.ColumnSpan="2" Margin="5" Grid.Row="2" Background="White" CornerRadius="6">
-					<FlowDocumentScrollViewer>
+                    <FlowDocumentScrollViewer Foreground="Black">
 						<FlowDocumentScrollViewer.Resources>
 							<Style TargetType="Hyperlink">
 								<Setter Property="TextDecorations" Value="{x:Null}" />
 							</Style>
 						</FlowDocumentScrollViewer.Resources>
-						<Controls:BindableFlowDocument TextSource="{Binding SelectedPost.PageText}" FontSize="12" TextAlignment="Left" FontFamily="Century" PagePadding="3" />
+						<Controls:BindableFlowDocument  TextSource="{Binding SelectedPost.PageText}" FontSize="12" Foreground="Black" TextAlignment="Left" FontFamily="Century" PagePadding="3" />
 					</FlowDocumentScrollViewer>
 				</Border>
 
-				<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,5,0,3" Text="{Binding SelectedPost.User.UserName}" VerticalAlignment="Top" FontWeight="Bold" Foreground="Black" />
+				<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,5,0,3" Text="{Binding SelectedPost.User.UserName}" VerticalAlignment="Top" FontWeight="Bold" Foreground="White" />
 
 				<!-- пейджинг (взад\вперед) -->
 				<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" Command="{Binding SelectNextPost}" Content="&gt;" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
