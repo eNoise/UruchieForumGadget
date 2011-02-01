@@ -15,6 +15,9 @@ namespace Uruchie.Core.Model
         [DataMember(Name = "thread")]
         public Thread Thread { get; set; }
 
+        [DataMember(Name = "post_rating")]
+        public string Rating { get; set; }
+
         [DataMember(Name = "user")]
         public User User { get; set; }
 
@@ -24,6 +27,14 @@ namespace Uruchie.Core.Model
         public string PostUrl { get; set; }
 
         public DateTime DateTime { get; set; }
+
+        public bool PostIsBullshit
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Rating) && Rating.Contains("-");
+            }
+        }
 
         public override string ToString()
         {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Uruchie.ForumGadjet.Model;
+using Uruchie.Core.Model;
 
 namespace Uruchie.ForumGadjet.ViewModel
 {
@@ -17,7 +17,6 @@ namespace Uruchie.ForumGadjet.ViewModel
                 if (value == null)
                     Posts = posts; //update the post list when deselected
                 RaisePropertyChanged("SelectedPost");
-                RaisePropertyChanged("TextAsFlowDocument"); //external linked property
             }
         }
 

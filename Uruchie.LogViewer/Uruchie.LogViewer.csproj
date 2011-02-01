@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Uruchie.Core\Uruchie.Core.csproj">
+      <Project>{16D6CD9B-5AFB-42CC-9AA2-2AAE9C56D04E}</Project>
+      <Name>Uruchie.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Uruchie.ForumGadjet\Uruchie.ForumGadjet.csproj">
       <Project>{85B78E58-647E-4BF7-B2DB-0800ADC2F283}</Project>
       <Name>Uruchie.ForumGadjet</Name>

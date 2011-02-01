@@ -7,15 +7,17 @@
 	<DataTemplate x:Key="PostDataTemplate">
 		<Border x:Name="rootBorder" Width="250" Margin="0" BorderThickness="0,0,0,1" CornerRadius="0">
 			<Border.Background>
-				<RadialGradientBrush>
-					<GradientStop Color="#FF48895A" Offset="1" />
-					<GradientStop Color="#FE45AD5D" Offset="0.016" />
-				</RadialGradientBrush>
+				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+					<GradientStop Color="#FF48895A" Offset="1"/>
+					<GradientStop Color="#FE4AA960" Offset="0.016"/>
+					<GradientStop Color="#FE428B54" Offset="0.151"/>
+					<GradientStop Color="#FE4F9F64" Offset="0.649"/>
+				</LinearGradientBrush>
 			</Border.Background>
 			<Border.BorderBrush>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 					<GradientStop Color="Black" Offset="0" />
-					<GradientStop Color="#FF4D6C56" Offset="1" />
+					<GradientStop Color="#FF2C8345" Offset="1" />
 				</LinearGradientBrush>
 			</Border.BorderBrush>
             
@@ -30,8 +32,10 @@
 					<RowDefinition Height="4" />
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Column="1" Text="{Binding Thread.Title}" Margin="4,1" FontSize="12" Foreground="White" Background="#00140D23" TextTrimming="CharacterEllipsis" FontStyle="Normal" />
-
+				<TextBlock Grid.Column="1" Text="{Binding Thread.Title}" Margin="4,1,19,1" FontSize="12" Foreground="White" Background="#00140D23" TextTrimming="CharacterEllipsis" FontStyle="Normal" />
+				<TextBlock Grid.Column="1" Text="{Binding Rating}" x:Name="rating" HorizontalAlignment="Right" Foreground="#FFD3E9D2" Margin="0,2,5,0" FontSize="10.667" />
+				
+				
 				<TextBlock Grid.Column="1" Margin="25,-14,0,3" Grid.Row="1" Text="{Binding User.UserName}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Foreground="#FFFFED78" />
 				<TextBlock Grid.Column="1" Margin="4,-14,0,0" Grid.Row="1" Text="От: " Foreground="#FFBCBCBC" />
 				<TextBlock Grid.Column="1" Margin="4,-12,8,4" Grid.Row="1" FontSize="10" Text="{Binding DateTime, StringFormat=\{0:HH:mm\}}" Foreground="#FFB4B4B4" HorizontalAlignment="Right" />
@@ -66,6 +70,9 @@
 					</Setter.Value>
 				</Setter>
 			</Trigger>
+			<DataTrigger Binding="{Binding PostIsBullshit}" Value="True">
+				<Setter TargetName="rating" Property="Foreground" Value="#FFFF6859"/>
+			</DataTrigger>
 		</DataTemplate.Triggers>
 	</DataTemplate>
 
@@ -88,8 +95,9 @@
 		<Grid>
 			<Grid.Background>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-					<GradientStop Color="#FF1DA31F" Offset="0" />
-					<GradientStop Color="#FF1C5A1D" Offset="0.115" />
+					<GradientStop Color="#FF3D3D3D" Offset="0.047" />
+					<GradientStop Color="#FF414141" Offset="0.115" />
+					<GradientStop Color="#FF474747"/>
 				</LinearGradientBrush>
 			</Grid.Background>
 			<Grid.RowDefinitions>
@@ -134,7 +142,7 @@
 			</Grid>
 
 			<!-- форма просмотра текста сообщения -->
-			<Grid Grid.RowSpan="2" x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}" Background="#95000000">
+			<Grid Grid.RowSpan="2" x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}" Background="#FF378F41" d:IsHidden="True">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="84" />
 					<ColumnDefinition />
@@ -153,7 +161,7 @@
 					<Image Source="{Binding SelectedPost.User.AvatarUrl}" Margin="2" />
 				</Border>
 
-				<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="#FFACFFC0" LineStackingStrategy="BlockLineHeight" LineHeight="12" Margin="0,4,5,0" />
+				<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="White" LineStackingStrategy="BlockLineHeight" LineHeight="12" Margin="0,4,5,0" />
 
 				<Border BorderThickness="0" Grid.ColumnSpan="2" Margin="5" Grid.Row="2" Background="White" CornerRadius="6">
                     <FlowDocumentScrollViewer Foreground="Black">
@@ -166,15 +174,34 @@
 					</FlowDocumentScrollViewer>
 				</Border>
 
-				<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,5,0,3" Text="{Binding SelectedPost.User.UserName}" VerticalAlignment="Top" FontWeight="Bold" Foreground="White" />
+				<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,5,0,3" Text="{Binding SelectedPost.User.UserName}" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FFF9FF90" />
 
 				<!-- пейджинг (взад\вперед) -->
-				<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" Command="{Binding SelectNextPost}" Content="&gt;" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
-				<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" Command="{Binding SelectPreviousPost}" Content="&lt;" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,40,0" />
+				<!--Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
+					Command="{Binding SelectNextPost}" Content="&gt;" 
+					VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
+				<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
+					Command="{Binding SelectPreviousPost}" Content="&lt;" VerticalAlignment="Bottom" 
+					HorizontalAlignment="Right" Margin="0,0,40,0" /-->
+				
+				<StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,8,-7">
+					<Button Template="{StaticResource MenuButtonTemplate}" Foreground="White" 
+						FontSize="18" FontWeight="Bold" Cursor="Hand" Command="{Binding MinusRating}">
+						-
+					</Button>
+					<TextBlock Text="{Binding SelectedPost.Rating}" Margin="5,0" FontSize="16" FontWeight="Bold" Foreground="#FFCACACA"/>
+					<Button Template="{StaticResource MenuButtonTemplate}"  Foreground="White" FontSize="16"
+						FontWeight="Bold" Cursor="Hand" Command="{Binding PlusRating}">
+						+
+					</Button>
+				</StackPanel>
+				
+				
 
-				<TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Foreground="#FF2C54F3" TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,3">
-					<Controls:HyperlinkControl NavigateUri="{Binding SelectedPost.PostUrl}" Foreground="#FF2C54F3">
-						<Run Text="ссылка на тему" />
+				<TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Foreground="LightBlue"
+					TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,3">
+					<Controls:HyperlinkControl NavigateUri="{Binding SelectedPost.PostUrl}" Foreground="LightBlue">
+						<Run Text="ссылка на тему" Foreground="LightBlue"/>
 					</Controls:HyperlinkControl>
 				</TextBlock>
 			</Grid>

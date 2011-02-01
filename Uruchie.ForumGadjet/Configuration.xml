@@ -3,7 +3,13 @@
   <PostLimit>10</PostLimit> <!--1..100-->
   <RefreshInterval>60</RefreshInterval> <!--10..1000-->
   <NewPostsAreAtTheTop>false</NewPostsAreAtTheTop>
-  <ForumUrl>forum.uruchie.org</ForumUrl>
-  <ApiUrl>http://uruchie.org/api.php</ApiUrl>
+  <ServiceSettings>
+    <ForumUrl>forum.uruchie.org</ForumUrl>
+    <ApiUrl>http://uruchie.org/api.php</ApiUrl>
+    <UserName>Nagg</UserName>
+    <PasswordHash>79f87ef0c0827c1a56f219a8696e36f3</PasswordHash>
+  </ServiceSettings>
   <Skin>DefaultSkin</Skin>
+  <IgnoreNicks></IgnoreNicks>
+  <IgnorePosts></IgnorePosts>
 </Configuration>

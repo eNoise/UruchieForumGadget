@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Json;
@@ -33,6 +34,9 @@ namespace Uruchie.Core.Service
             lastMessageFields = ReflectionHelper.GetActiveDataMembers(typeof (Post));
         }
 
+        /// <summary>
+        /// Current application version
+        /// </summary>
         public string AppVersion { get; private set; }
 
         /// <summary>
@@ -65,8 +69,7 @@ namespace Uruchie.Core.Service
         /// <summary>
         /// Async data loading
         /// </summary>
-        private static void LoadDataAsync<T>(string url, string arguments,
-                                             Action<OperationCompletedEventArgs<T>> callback, object userState = null)
+        private static void LoadDataAsync<T>(string url, string arguments, Action<OperationCompletedEventArgs<T>> callback, object userState = null)
             where T : class
         {
             ThreadPool.QueueUserWorkItem(o =>
@@ -110,7 +113,12 @@ namespace Uruchie.Core.Service
             string postsQuery = string.Format("module=forum&action=lastmessages&limit={0}{1}", postLimit,
                                               string.IsNullOrEmpty(lastMessageFields) ? string.Empty : "&filter=" + lastMessageFields);
 
-            LoadDataAsync(settings.ApiUrl, postsQuery, callback);
+            LoadDataAsync<LastMessages>(settings.ApiUrl, postsQuery, e =>
+                                                           {
+                                                               if (e.Error == null && e.Result != null && e.Result.Posts != null)
+                                                                   e.Result.Posts = PostCollectionProcessor.PreparePosts(settings, e.Result.Posts).ToArray();
+                                                               callback(e);
+                                                           });
         }
 
         /// <summary>
@@ -122,6 +130,35 @@ namespace Uruchie.Core.Service
             client.DownloadStringCompleted +=
                 (s, e) => callback(CommonHelper.TryParseVersion(e.Result));
             client.DownloadStringAsync(new Uri(settings.UpdatesFileUrl));
+        }
+
+        /// <summary>
+        /// Try to authenticate
+        /// </summary>
+        public void Authenticate(Action<OperationCompletedEventArgs<AuthenticationResult>> callback)
+        {
+            string query = string.Format("module=forum&action=login&username={0}&password={1}", settings.UserName, settings.PasswordHash);
+            LoadDataAsync(settings.ApiUrl, query, callback);
+        }
+
+        /// <summary>
+        /// Change rating
+        /// </summary>
+        public void ChangeRating(string postId, bool positive, Action<OperationCompletedEventArgs<RatingOrKarmaChangeResult>> callback)
+        {
+            string query = string.Format("module=forum&action={2}&username={0}&password={1}&postid={3}", 
+                settings.UserName, settings.PasswordHash, positive ? "plusrating" : "minusrating", postId);
+            LoadDataAsync(settings.ApiUrl, query, callback);
+        }
+
+        /// <summary>
+        /// Change karma
+        /// </summary>
+        public void ChangeKarma(string userName, bool positive, Action<OperationCompletedEventArgs<RatingOrKarmaChangeResult>> callback)
+        {
+            string query = string.Format("module=forum&action={2}&username={0}&password={1}&username={3}",
+                settings.UserName, settings.PasswordHash, positive ? "pluskarma" : "minuskarma", userName);
+            LoadDataAsync(settings.ApiUrl, query, callback);
         }
     }
 }

@@ -1,26 +1,98 @@
-﻿<Window x:Class="Uruchie.ForumGadjet.View.SettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Настройки" Height="140" Width="300" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" MaxHeight="140" MinHeight="140" MaxWidth="300" MinWidth="300">
-	<Grid>
+﻿<Window x:Class="Uruchie.ForumGadjet.View.SettingsView" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Title="Настройки" Height="240" Width="300" 
+        WindowStyle="ToolWindow" 
+        WindowStartupLocation="CenterScreen" 
+        MaxHeight="313" 
+        MinHeight="313" 
+        MaxWidth="325" 
+        MinWidth="325">
+    <Window.Resources>
+        
+        <Style x:Key="OptionsName" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="LineHeight" Value="10.667" />
+            <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
+        </Style>
+
+        <Style x:Key="watermarkableTextboxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border x:Name="BorderBase" Background="White" BorderThickness="1" 
+                            BorderBrush="Silver" />
+                            <Label x:Name="TextPrompt" FontStyle="Italic" Content="{TemplateBinding Tag}" Visibility="Collapsed" Focusable="False"  Foreground="Silver"></Label>
+                            <ScrollViewer Margin="0" x:Name="PART_ContentHost" Foreground="{DynamicResource OutsideFontColor}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsFocused" Value="False"></Condition>
+                                    <Condition Property="Text" Value=""></Condition>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Visibility" TargetName="TextPrompt" Value="Visible"></Setter>
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderThickness" TargetName="BorderBase" Value="2.4,2.4,1,1"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+    </Window.Resources>
+
+        <Grid Margin="2,4,8,2">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="99" />
+			<ColumnDefinition Width="110" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
 			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-		</Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="26" />
+        </Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0" Text="Интервал обновления" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0,0,0" LineHeight="10.667" LineStackingStrategy="BlockLineHeight" />
+        <TextBlock Grid.Row="0" Text="Учетная запись*" Style="{StaticResource OptionsName}" Foreground="Green"/>
+        <TextBlock Grid.Row="1" Text="Пароль*" Style="{StaticResource OptionsName}" Foreground="Green"/>
+        <TextBlock Grid.Row="2" Text="Интервал обновления" Style="{StaticResource OptionsName}"/>
+        <TextBlock Grid.Row="3" Text="Скин" Style="{StaticResource OptionsName}"/>
+        <TextBlock Grid.Row="4" Text="Игнор постов от авторов:" Style="{StaticResource OptionsName}"/>
+        <TextBlock Grid.Row="5" Text="Игнор постов, содержащих:" Style="{StaticResource OptionsName}"/>
+            
+            
+		<TextBlock Grid.Row="2" Grid.Column="1" Text="секунд (от 10 до 1000)" VerticalAlignment="Center" Margin="56,0,0,0" HorizontalAlignment="Left" />
+		<TextBox Grid.Row="2" Grid.Column="1" Margin="0,4" HorizontalAlignment="Left" Width="50" Text="{Binding RefreshInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+		
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,4,0,4" ItemsSource="{Binding Skins}" SelectedItem="{Binding SelectedSkin, Mode=TwoWay}" />
 
-		<TextBlock Grid.Row="1" Text="Скин" VerticalAlignment="Center" Margin="10,0,0,0" />
-		<TextBlock Grid.Row="0" Grid.Column="1" Text="секунд (от 10 до 1000)" VerticalAlignment="Center" Margin="56,0,0,0" HorizontalAlignment="Left" />
+		<Button Grid.Column="1" Grid.Row="6" IsDefault="True" Content="Oк" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Margin="0,0,0,0" Command="{Binding ApplyChangesCommand}" />
 
-		<TextBox Grid.Row="0" Grid.Column="1" Margin="0,4" HorizontalAlignment="Left" Width="50" Text="{Binding RefreshInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Tag="лукашенк, оппозиц, выбор," Grid.Column="1" Grid.Row="5" Margin="0,4" TextWrapping="Wrap" 
+                 Style="{StaticResource watermarkableTextboxStyle}" Text="{Binding IgnorePosts, Mode=TwoWay}"/>
+        <TextBox Tag="Nagg, DEg," Grid.Column="1" Grid.Row="4" Margin="0,4" TextWrapping="Wrap" 
+                 Style="{StaticResource watermarkableTextboxStyle}" Text="{Binding IgnoreNicks, Mode=TwoWay}"/>
+            
+        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,4" TextWrapping="Wrap" Text="{Binding UserName, Mode=TwoWay}"/>
+        <PasswordBox x:Name="passwordBox" Grid.Column="1" Grid.Row="1" Margin="0,4"/>
 
-		<ComboBox Grid.Row="1" Grid.Column="1" Margin="0,4,5,4" ItemsSource="{Binding Skins}" SelectedItem="{Binding SelectedSkin, Mode=TwoWay}" />
 
-		<Button Grid.Column="1" Grid.Row="2" IsDefault="True" Content="Oк" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Margin="0,0,5,-10" Command="{Binding ApplyChangesCommand}" />
+        <TextBlock Grid.ColumnSpan="2" Foreground="Green" Grid.Row="6" Text="* - для изменения рейтинга" 
+                   Style="{StaticResource OptionsName}"  />
 
-
-	</Grid>
+    </Grid>
 </Window>

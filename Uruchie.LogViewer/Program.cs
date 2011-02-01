@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Uruchie.ForumGadjet.Helpers;
-using Uruchie.ForumGadjet.Model;
-using Uruchie.ForumGadjet.Service;
+using Uruchie.Core.Helpers;
 
 namespace Uruchie.LogViewer
 {
@@ -13,21 +11,7 @@ namespace Uruchie.LogViewer
     {
         static void Main(string[] args)
         {
-            UruchieForumService.LoadDataAsync<LogInfo>("http://uruchie.org/api.php", "module=forum&action=getlogmessage&app=ForumGadget&limit=100", Loaded);
-            Console.ReadKey();
-        }
-
-        private static void Loaded(OperationCompletedEventArgs<LogInfo> obj)
-        {
-            string file = "C:\\syslog.txt";
-            if (File.Exists(file))
-                File.Delete(file);
-            File.WriteAllLines(file, obj.Result.Messages.OrderBy(i => i.IpAddress).Select(i =>
-                string.Format("[{1}][{0}][{2}]", i.MessageType, i.IpAddress, i.Message)).ToArray());
-            foreach (var item in obj.Result.Messages)
-            {
-                Console.WriteLine(item);
-            }
+            var result = HttpHelper.HttpPost("http://uruchie.org/api.php", "module=forum&action=lastmessages&limit=1");
         }
     }
 }

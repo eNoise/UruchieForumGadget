@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Threading;
+using Uruchie.Core;
 using Uruchie.ForumGadjet.Helpers;
 using Uruchie.ForumGadjet.Settings;
 using Uruchie.ForumGadjet.Skins;
@@ -13,7 +14,7 @@ namespace Uruchie.ForumGadjet
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            bool success = SkinManager.ChangeSkin(ConfigurationManager.CurrentConfiguration.Skin);
+            //bool success = SkinManager.ChangeSkin(ConfigurationManager.CurrentConfiguration.Skin);
 
             App.Current.DispatcherUnhandledException += CurrentDispatcherUnhandledException;
             base.OnStartup(e);

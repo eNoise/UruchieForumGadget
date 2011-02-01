@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Markup;
-using Uruchie.ForumGadjet.Helpers.Mvvm;
+using Uruchie.Core.Model;
+using Uruchie.Core.Presentation;
+using Uruchie.Core.Service;
 using Uruchie.ForumGadjet.View;
 
 namespace Uruchie.ForumGadjet.ViewModel
@@ -15,6 +18,8 @@ namespace Uruchie.ForumGadjet.ViewModel
         public RelayCommand LoadPosts { get; set; }
         public RelayCommand ReloadResources { get; set; }
         public RelayCommand DisplaySettings { get; set; }
+        public RelayCommand PlusRating { get; set; }
+        public RelayCommand MinusRating { get; set; }
 
         public void InitializeCommands()
         {
@@ -23,6 +28,37 @@ namespace Uruchie.ForumGadjet.ViewModel
             SelectPreviousPost = new RelayCommand(SelectPreviousPostAction, SelectPreviousPostCanExecute);
             ReloadResources = new RelayCommand(ReloadResourcesAction);
             DisplaySettings = new RelayCommand(DisplaySettingsAction);
+
+            PlusRating = new RelayCommand(PlusRatingAction);
+            MinusRating = new RelayCommand(MinusRatingAction);
+        }
+
+        private void MinusRatingAction()
+        {
+            if (SelectedPost == null || string.IsNullOrEmpty(configuration.ServiceSettings.UserName) || 
+                string.IsNullOrEmpty(configuration.ServiceSettings.PasswordHash))
+                return;
+
+            service.ChangeRating(SelectedPost.PostId, false, MinusRatingActionCallback);
+        }
+
+        private void MinusRatingActionCallback(OperationCompletedEventArgs<RatingOrKarmaChangeResult> obj)
+        {
+            //if (obj.Error != null && obj.Result != null && (obj.Result.Error == null || !obj.Result.Error.HasError))
+            //    SelectedPost.
+        }
+
+        private void PlusRatingAction()
+        {
+            if (SelectedPost == null || string.IsNullOrEmpty(configuration.ServiceSettings.UserName) ||
+                string.IsNullOrEmpty(configuration.ServiceSettings.PasswordHash))
+                return;
+
+            service.ChangeRating(SelectedPost.PostId, true, PlusRatingActionCallback);
+        }
+
+        private void PlusRatingActionCallback(OperationCompletedEventArgs<RatingOrKarmaChangeResult> obj)
+        {
         }
 
         private void DisplaySettingsAction()

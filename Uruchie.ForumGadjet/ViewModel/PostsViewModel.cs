@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
-using Uruchie.ForumGadjet.Helpers;
-using Uruchie.ForumGadjet.Helpers.Mvvm;
-using Uruchie.ForumGadjet.Model;
-using Uruchie.ForumGadjet.Service;
+using Uruchie.Core;
+using Uruchie.Core.Helpers;
+using Uruchie.Core.Model;
+using Uruchie.Core.Presentation;
+using Uruchie.Core.Service;
 using Uruchie.ForumGadjet.Settings;
 
 namespace Uruchie.ForumGadjet.ViewModel
@@ -15,6 +16,7 @@ namespace Uruchie.ForumGadjet.ViewModel
     /// </summary>
     public partial class PostsViewModel : ViewModelBase
     {
+        private readonly IUruchieForumService service;
         private readonly DispatcherTimer timer;
         private Configuration configuration;
         private string currentSkin;
@@ -27,6 +29,8 @@ namespace Uruchie.ForumGadjet.ViewModel
         public PostsViewModel()
         {
             ReloadConfiguration();
+            service = new UruchieForumService(configuration.ServiceSettings);
+            
             InitializeCommands();
 
             if (!IsInDesignMode)
@@ -51,13 +55,12 @@ namespace Uruchie.ForumGadjet.ViewModel
         /// </summary>
         public void ReloadConfiguration()
         {
-            ConfigurationManager.Reload();
             configuration = ConfigurationManager.CurrentConfiguration;
         }
 
         private void TimerTick(object sender, EventArgs e)
         {
-            timer.Interval = TimeSpan.FromSeconds(ConfigurationManager.CurrentConfiguration.RefreshInterval);
+            timer.Interval = TimeSpan.FromSeconds(configuration.RefreshInterval);
             LoadPostsAsync();
         }
 
@@ -70,7 +73,7 @@ namespace Uruchie.ForumGadjet.ViewModel
                 return;
 
             IsBusy = true;
-            UruchieForumService.LoadLastPostsAsync(Loaded);
+            service.LoadLastPostsAsync(configuration.PostLimit, Loaded);
         }
 
         private void Loaded(OperationCompletedEventArgs<LastMessages> obj)
@@ -82,7 +85,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             if (obj.Error == null)
                 try
                 {
-                    posts = DataProcessor.PreparePosts(obj.Result.Posts, configuration).ToList();
+                    posts = obj.Result.Posts.ToList();
                     IsError = false;
                 }
                 catch (Exception exc)

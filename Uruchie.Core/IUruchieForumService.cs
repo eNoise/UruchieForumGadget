@@ -21,5 +21,20 @@ namespace Uruchie.Core
         /// Returns actual version
         /// </summary>
         void CheckIfNewerVersionExists(Action<Version> callback);
+
+        /// <summary>
+        /// Try to authenticate
+        /// </summary>
+        void Authenticate(Action<OperationCompletedEventArgs<AuthenticationResult>> callback);
+
+        /// <summary>
+        /// Change rating
+        /// </summary>
+        void ChangeRating(string postId, bool positive, Action<OperationCompletedEventArgs<RatingOrKarmaChangeResult>> callback);
+
+        /// <summary>
+        /// Change karma
+        /// </summary>
+        void ChangeKarma(string userName, bool positive, Action<OperationCompletedEventArgs<RatingOrKarmaChangeResult>> callback);
     }
 }
