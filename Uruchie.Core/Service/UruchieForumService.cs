@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Json;
@@ -110,7 +111,12 @@ namespace Uruchie.Core.Service
             string postsQuery = string.Format("module=forum&action=lastmessages&limit={0}{1}", postLimit,
                                               string.IsNullOrEmpty(lastMessageFields) ? string.Empty : "&filter=" + lastMessageFields);
 
-            LoadDataAsync(settings.ApiUrl, postsQuery, callback);
+            LoadDataAsync<LastMessages>(settings.ApiUrl, postsQuery, e =>
+                                                           {
+                                                               if (e.Error != null && e.Result != null && e.Result.Posts != null)
+                                                                   e.Result.Posts = PostCollectionProcessor.PreparePosts(settings, e.Result.Posts).ToArray();
+                                                               callback(e);
+                                                           });
         }
 
         /// <summary>

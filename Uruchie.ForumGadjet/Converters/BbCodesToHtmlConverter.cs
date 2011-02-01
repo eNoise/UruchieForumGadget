@@ -1,4 +1,5 @@
 ﻿using System;
+using Uruchie.Core.Helpers;
 using Uruchie.ForumGadjet.Helpers;
 
 namespace Uruchie.ForumGadjet.Converters

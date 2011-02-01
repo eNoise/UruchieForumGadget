@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Markup;
-using Uruchie.ForumGadjet.Helpers.Mvvm;
+using Uruchie.Core.Presentation;
 using Uruchie.ForumGadjet.View;
 
 namespace Uruchie.ForumGadjet.ViewModel

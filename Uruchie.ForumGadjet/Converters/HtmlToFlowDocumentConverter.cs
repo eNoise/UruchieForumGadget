@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Navigation;
 using HTMLConverter;
+using Uruchie.Core.Helpers;
 using Uruchie.ForumGadjet.Helpers;
 
 namespace Uruchie.ForumGadjet.Converters
@@ -22,13 +24,13 @@ namespace Uruchie.ForumGadjet.Converters
                     string xaml = HtmlToXamlConverter.ConvertHtmlToXaml(BbCodesToHtmlConverter.BbCodesToHtml(value),
                                                                         false);
                     section = XamlReader.Parse(xaml) as Section;
+                    CommonHelper.Try(() => SetHyperlinksHandler(section));
                 }
                 catch
                 {
                     section = new Section(new Paragraph(new Run(value)));
                 }
 
-                CommonHelper.Try(() => SetHyperlinksHandler(section));
                 return section;
             }
             return new Section(new Paragraph(new Run(value)));

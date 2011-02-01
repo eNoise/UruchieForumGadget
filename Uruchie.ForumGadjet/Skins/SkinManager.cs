@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Markup;
+using Uruchie.Core;
 using Uruchie.ForumGadjet.Helpers;
 
 namespace Uruchie.ForumGadjet.Skins
@@ -25,8 +26,12 @@ namespace Uruchie.ForumGadjet.Skins
         {
             try
             {
-                string dir = CommonHelper.GetInstallationFolder();
+                string dir = CommonUtils.GetInstallationFolder();
                 string skinDir = Path.Combine(dir, "Skins");
+
+                if (!File.Exists(skinDir))
+                    return new[] {DefaultSkin};
+
                 List<string> skinDirectories = Directory.GetDirectories(skinDir).ToList();
                 foreach (string skinDirectory in skinDirectories)
                 {
@@ -53,9 +58,15 @@ namespace Uruchie.ForumGadjet.Skins
                 if (string.IsNullOrEmpty(skinName))
                     throw new ArgumentException();
 
-                string path = CommonHelper.GetInstallationFolder();
+                string path = CommonUtils.GetInstallationFolder();
                 string skinUrl = Path.Combine(Path.Combine(path, SkinsDirectory),
                                               Path.Combine(skinName, skinName + ".xaml"));
+
+                if (!File.Exists(skinUrl))
+                {
+                    ChangeSkinToDefault();
+                    return false;
+                }
 
                 var dictionary =
                     XamlReader.Load(File.Open(skinUrl, FileMode.Open, FileAccess.Read)) as ResourceDictionary;
@@ -65,15 +76,20 @@ namespace Uruchie.ForumGadjet.Skins
             }
             catch (Exception exc)
             {
-                Application.Current.Resources.Clear();
-                Application.Current.Resources.MergedDictionaries.Add(
-                    new ResourceDictionary
-                        {
-                            Source = new Uri(@"pack://application:,,,/Uruchie.ForumGadjet;component/Skins/DefaultSkin.xaml")
-                        });
-
+                ChangeSkinToDefault();
                 return false;
             }
+        }
+
+        private static void ChangeSkinToDefault()
+        {
+            Application.Current.Resources.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(
+                new ResourceDictionary
+                {
+                    // if we can't 
+                    Source = new Uri(@"pack://application:,,,/Uruchie.ForumGadjet;component/Skins/DefaultSkin.xaml")
+                });
         }
     }
 }

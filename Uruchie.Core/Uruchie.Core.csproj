@@ -47,6 +47,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\CryptoHelper.cs" />
+    <Compile Include="Service\PostCollectionProcessor.cs" />
     <Compile Include="Helpers\CommonHelper.cs" />
     <Compile Include="Helpers\HttpHelper.cs" />
     <Compile Include="Logger.cs" />

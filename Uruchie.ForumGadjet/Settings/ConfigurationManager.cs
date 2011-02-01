@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Xml.Serialization;
+using Uruchie.Core;
+using Uruchie.Core.Presentation;
 using Uruchie.ForumGadjet.Helpers;
-using Uruchie.ForumGadjet.Helpers.Mvvm;
 using Uruchie.ForumGadjet.Skins;
 
 namespace Uruchie.ForumGadjet.Settings
@@ -68,7 +70,13 @@ namespace Uruchie.ForumGadjet.Settings
             try
             {
                 using (var stream = File.Open(GetConfigPath(), FileMode.Open, FileAccess.Read))
-                    return xmlSerializer.Deserialize(stream) as Configuration;
+                {
+                    var config = xmlSerializer.Deserialize(stream) as Configuration;
+                    config.ServiceSettings.Version = GetCurrentVersion();
+                    config.ServiceSettings.ApplicationName = "ForumGadget";
+                    config.ServiceSettings.UpdatesFileUrl = "";
+                    return config;
+                }
             } 
             catch(Exception exc)
             {
@@ -78,19 +86,32 @@ namespace Uruchie.ForumGadjet.Settings
 
         private static string GetConfigPath()
         {
-            return Path.Combine(CommonHelper.GetInstallationFolder(), ConfigFileName);
+            return Path.Combine(CommonUtils.GetInstallationFolder(), ConfigFileName);
         }
 
         private static Configuration CreateDefault()
         {
             return new Configuration
                        {
-                           ApiUrl = "http://uruchie.org/api.php",
-                           ForumUrl = "forum.uruchie.org",
+                           ServiceSettings = new Core.Service.ServiceSettings
+                            {
+                                ApiUrl = "http://uruchie.org/api.php",
+                                ForumUrl = "forum.uruchie.org",
+                                ApplicationName = "ForumGadget",
+                                UpdatesFileUrl = "http://uruchie.org/~Nagg/ForumGadget/lastversion.txt",
+                                Version = GetCurrentVersion()
+                            },
                            PostLimit = 10,
                            RefreshInterval = 60,
                            Skin = SkinManager.DefaultSkin
                        };
+        }
+
+        public static Version GetCurrentVersion()
+        {
+            if (ViewModelBase.IsInDesignModeStatic)
+                return new Version(6, 6, 6, 6);
+            return Assembly.GetExecutingAssembly().GetName().Version;
         }
     }
 }

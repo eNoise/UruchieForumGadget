@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Threading;
+using Uruchie.Core;
 using Uruchie.ForumGadjet.Helpers;
 using Uruchie.ForumGadjet.Settings;
 using Uruchie.ForumGadjet.Skins;

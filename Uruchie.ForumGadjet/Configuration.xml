@@ -3,7 +3,13 @@
   <PostLimit>10</PostLimit> <!--1..100-->
   <RefreshInterval>60</RefreshInterval> <!--10..1000-->
   <NewPostsAreAtTheTop>false</NewPostsAreAtTheTop>
-  <ForumUrl>forum.uruchie.org</ForumUrl>
-  <ApiUrl>http://uruchie.org/api.php</ApiUrl>
+  <ServiceSettings>
+    <ForumUrl>forum.uruchie.org</ForumUrl>
+    <ApiUrl>http://uruchie.org/api.php</ApiUrl>
+  </ServiceSettings>
   <Skin>DefaultSkin</Skin>
+  <IgnoreNicks>Бот, Bot,</IgnoreNicks>
+  <IgnorePosts>лукашенк, выборы, оппозиц,</IgnorePosts>
+  <UserName>Nagg</UserName>
+  <PasswordHash></PasswordHash>
 </Configuration>

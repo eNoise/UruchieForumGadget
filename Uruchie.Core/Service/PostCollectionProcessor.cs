@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Uruchie.ForumGadjet.Helpers;
-using Uruchie.ForumGadjet.Model;
-using Uruchie.ForumGadjet.Settings;
+using Uruchie.Core.Helpers;
+using Uruchie.Core.Model;
 
-namespace Uruchie.ForumGadjet
+namespace Uruchie.Core.Service
 {
-    public static class DataProcessor
+    public static class PostCollectionProcessor
     {
-        public static IEnumerable<Post> PreparePosts(IEnumerable<Post> posts, Configuration configuration)
+        public static IEnumerable<Post> PreparePosts(ServiceSettings settings, IEnumerable<Post> posts)
         {
             foreach (Post post in posts)
             {
@@ -18,12 +17,12 @@ namespace Uruchie.ForumGadjet
 
                 // 3. prepare calculated fields:
                 post.PostUrl = string.Format("http://{0}/showthread.php?threadid={1}&p={2}&viewfull=1#post{2}",
-                                             configuration.ForumUrl, post.Thread.ThreadId, post.PostId);
+                                             settings.ForumUrl, post.Thread.ThreadId, post.PostId);
 
                 // building url to avatar
                 if (!string.IsNullOrEmpty(post.User.AvatarRevision) && post.User.AvatarRevision != "0")
                     post.User.AvatarUrl = string.Format("http://{0}/customavatars/avatar{1}_{2}.gif",
-                                                        configuration.ForumUrl, post.User.UserId,
+                                                        settings.ForumUrl, post.User.UserId,
                                                         post.User.AvatarRevision);
 
                 // 4. remove escaping

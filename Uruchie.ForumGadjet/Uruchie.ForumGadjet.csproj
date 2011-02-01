@@ -100,18 +100,8 @@
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\IsNullToHiddenConverter.cs" />
     <Compile Include="Converters\NotOperatorConverter.cs" />
-    <Compile Include="DataProcessor.cs" />
     <Compile Include="Converters\HtmlToFlowDocumentConverter.cs" />
-    <Compile Include="Helpers\CommonHelper.cs" />
-    <Compile Include="Helpers\Logger.cs" />
-    <Compile Include="Helpers\HttpHelper.cs" />
-    <Compile Include="Helpers\ReflectionHelper.cs" />
-    <Compile Include="Model\LogInfo.cs" />
-    <Compile Include="Model\LogMessage.cs" />
-    <Compile Include="Model\LogType.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="Model\Thread.cs" />
-    <Compile Include="Helpers\SystemInfoHelper.cs" />
+    <Compile Include="Helpers\CommonUtils.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Settings\ConfigurationManager.cs" />
     <Compile Include="Skins\SkinManager.cs" />
@@ -122,11 +112,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Service\UruchieForumService.cs" />
-    <Compile Include="Helpers\Mvvm\PropertyChangedBase.cs" />
-    <Compile Include="Helpers\Mvvm\RelayCommand.cs" />
-    <Compile Include="Helpers\Mvvm\RelayCommandGeneric.cs" />
-    <Compile Include="Helpers\Mvvm\ViewModelBase.cs" />
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -135,9 +120,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\LastMessages.cs" />
-    <Compile Include="Service\OperationCompletedEventArgs.cs" />
-    <Compile Include="Model\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -220,6 +202,12 @@
     <Content Include="Configuration.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Uruchie.Core\Uruchie.Core.csproj">
+      <Project>{16D6CD9B-5AFB-42CC-9AA2-2AAE9C56D04E}</Project>
+      <Name>Uruchie.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <StartArguments />
