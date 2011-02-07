@@ -29,7 +29,7 @@ namespace Uruchie.ForumGadjet.Skins
                 string dir = CommonUtils.GetInstallationFolder();
                 string skinDir = Path.Combine(dir, "Skins");
 
-                if (!File.Exists(skinDir))
+                if (!Directory.Exists(skinDir))
                     return new[] {DefaultSkin};
 
                 List<string> skinDirectories = Directory.GetDirectories(skinDir).ToList();

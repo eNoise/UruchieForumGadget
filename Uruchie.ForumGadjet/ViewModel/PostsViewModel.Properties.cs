@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Uruchie.Core.Model;
 
 namespace Uruchie.ForumGadjet.ViewModel
@@ -23,7 +24,7 @@ namespace Uruchie.ForumGadjet.ViewModel
         /// <summary>
         /// Список постов
         /// </summary>
-        public List<Post> Posts
+        public ObservableCollection<Post> Posts
         {
             get { return posts; }
             set
@@ -60,6 +61,16 @@ namespace Uruchie.ForumGadjet.ViewModel
             {
                 isError = value;
                 RaisePropertyChanged("IsError");
+            }
+        }
+
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set
+            {
+                errorMessage = value;
+                RaisePropertyChanged("ErrorMessage");
             }
         }
 

@@ -44,8 +44,12 @@ namespace Uruchie.ForumGadjet.ViewModel
 
         private void MinusRatingActionCallback(OperationCompletedEventArgs<RatingOrKarmaChangeResult> obj)
         {
-            //if (obj.Error != null && obj.Result != null && (obj.Result.Error == null || !obj.Result.Error.HasError))
-            //    SelectedPost.
+            if (obj.Error == null && obj.Result != null && (obj.Result.Error == null || !obj.Result.Error.HasError))
+            {
+                var post = Posts.FirstOrDefault(i => i.PostId == obj.Result.Id);
+                if (post != null)
+                    post.IncrementRating(false);
+            }
         }
 
         private void PlusRatingAction()
@@ -59,12 +63,22 @@ namespace Uruchie.ForumGadjet.ViewModel
 
         private void PlusRatingActionCallback(OperationCompletedEventArgs<RatingOrKarmaChangeResult> obj)
         {
+            if (obj.Error == null && obj.Result != null && (obj.Result.Error == null || !obj.Result.Error.HasError))
+            {
+                var post = Posts.FirstOrDefault(i => i.PostId == obj.Result.Id);
+                if (post != null)
+                    post.IncrementRating(true);
+            }
         }
 
         private void DisplaySettingsAction()
         {
             var dlg = new SettingsView();
-            dlg.ShowDialog();
+            if (dlg.ShowDialog() == true)
+            {
+                ReloadConfiguration();
+                LoadPostsAsync();
+            }
         }
 
         private void ReloadResourcesAction()

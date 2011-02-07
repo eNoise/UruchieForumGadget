@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0"?>
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <PostLimit>10</PostLimit> <!--1..100-->
+  <PostLimit>20</PostLimit> <!--1..100-->
   <RefreshInterval>60</RefreshInterval> <!--10..1000-->
   <NewPostsAreAtTheTop>false</NewPostsAreAtTheTop>
   <ServiceSettings>
     <ForumUrl>forum.uruchie.org</ForumUrl>
     <ApiUrl>http://uruchie.org/api.php</ApiUrl>
     <UserName>Nagg</UserName>
-    <PasswordHash>79f87ef0c0827c1a56f219a8696e36f3</PasswordHash>
+    <PasswordHash></PasswordHash>
   </ServiceSettings>
   <Skin>DefaultSkin</Skin>
   <IgnoreNicks></IgnoreNicks>

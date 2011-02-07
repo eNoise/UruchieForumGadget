@@ -14,5 +14,7 @@ namespace Uruchie.Core.Model
 
         [DataMember(Name = "error")]
         public Error Error { get; set; }
+
+        public string Id { get; set; }
     }
 }

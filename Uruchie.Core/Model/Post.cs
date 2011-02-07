@@ -1,10 +1,11 @@
 using System;
 using System.Runtime.Serialization;
+using Uruchie.Core.Presentation;
 
 namespace Uruchie.Core.Model
 {
     [DataContract]
-    public class Post
+    public class Post : PropertyChangedBase
     {
         [DataMember(Name = "postid")]
         public string PostId { get; set; }
@@ -15,8 +16,18 @@ namespace Uruchie.Core.Model
         [DataMember(Name = "thread")]
         public Thread Thread { get; set; }
 
+        private string rating;
+
         [DataMember(Name = "post_rating")]
-        public string Rating { get; set; }
+        public string Rating
+        {
+            get { return rating; }
+            set
+            {
+                rating = value;
+                RaisePropertyChanged("Rating");
+            }
+        }
 
         [DataMember(Name = "user")]
         public User User { get; set; }
@@ -51,6 +62,13 @@ namespace Uruchie.Core.Model
         public override int GetHashCode()
         {
             return PostId.GetHashCode();
+        }
+
+        public void IncrementRating(bool positive)
+        {
+            int ratingNum = 0;
+            if (!string.IsNullOrEmpty(Rating) && int.TryParse(Rating, out ratingNum))
+                Rating = (positive ? ratingNum + 1 : ratingNum - 1).ToString();
         }
     }
 }

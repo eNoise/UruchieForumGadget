@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Threading;
 using Uruchie.Core;
@@ -16,13 +17,14 @@ namespace Uruchie.ForumGadjet.ViewModel
     /// </summary>
     public partial class PostsViewModel : ViewModelBase
     {
-        private readonly IUruchieForumService service;
+        private IUruchieForumService service;
         private readonly DispatcherTimer timer;
         private Configuration configuration;
         private string currentSkin;
         private bool isError;
+        private string errorMessage;
         private bool isFirstLoading;
-        private List<Post> posts;
+        private ObservableCollection<Post> posts;
         private Post selectedPost;
 
 
@@ -30,7 +32,6 @@ namespace Uruchie.ForumGadjet.ViewModel
         {
             ReloadConfiguration();
             service = new UruchieForumService(configuration.ServiceSettings);
-            
             InitializeCommands();
 
             if (!IsInDesignMode)
@@ -55,7 +56,10 @@ namespace Uruchie.ForumGadjet.ViewModel
         /// </summary>
         public void ReloadConfiguration()
         {
+            ConfigurationManager.Reload();
             configuration = ConfigurationManager.CurrentConfiguration;
+            if (service != null)
+                service.Settings = configuration.ServiceSettings;
         }
 
         private void TimerTick(object sender, EventArgs e)
@@ -85,7 +89,7 @@ namespace Uruchie.ForumGadjet.ViewModel
             if (obj.Error == null)
                 try
                 {
-                    posts = obj.Result.Posts.ToList();
+                    posts = FilterPosts(obj.Result.Posts).ToObservable();
                     IsError = false;
                 }
                 catch (Exception exc)
@@ -96,11 +100,48 @@ namespace Uruchie.ForumGadjet.ViewModel
             else
             {
                 IsError = true;
+                ErrorMessage = obj.Error.Message.Length > 35 ? obj.Error.Message.Remove(35) : obj.Error.Message;
                 Logger.LogError(obj.Error, "Error during LastMessages data loading");
             }
 
             if (SelectedPost == null)
                 Posts = posts; //update only when there is no selected item
+        }
+
+        private IEnumerable<Post> FilterPosts(IEnumerable<Post> posts)
+        {
+            if (posts == null)
+                return new List<Post>(0);
+
+            var result = new List<Post>(posts);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(configuration.IgnorePosts))
+                {
+                    var ignoreItems = configuration.IgnorePosts.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(i => i.Trim().ToLower()).Where(i => !string.IsNullOrEmpty(i));
+                    if (ignoreItems.Count() > 0)
+                        foreach (var post in posts)
+                            if (ignoreItems.Any(i => post.PageText.ToLower().Contains(i) || post.Thread.Title.ToLower().Contains(i)))
+                                result.Remove(post);
+                }
+
+                if (!string.IsNullOrEmpty(configuration.IgnoreNicks))
+                {
+                    var ignoreItems = configuration.IgnoreNicks.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i));
+                    if (ignoreItems.Count() > 0)
+                        foreach (var post in posts)
+                            if (ignoreItems.Any(i => post.User.UserName.Equals(i, StringComparison.CurrentCultureIgnoreCase)))
+                                result.Remove(post);
+                }
+                return result;
+            }
+            catch
+            {
+                return result;
+            }
         }
     }
 }

@@ -18,13 +18,15 @@ namespace Uruchie.ForumGadjet.View
             DataContext = viewModel = new SettingsViewModel();
             viewModel.AppliedChanges += (s, e) => DialogResult = true;
             viewModel.BeforeSubmit += ViewModelBeforeSubmit;
+
+            passwordBox.Password = string.IsNullOrEmpty(viewModel.UserName) ? "" : "11111111%";
         }
 
         private void ViewModelBeforeSubmit(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(passwordBox.Password))
                 viewModel.PasswordHash = string.Empty;
-            else
+            else if (passwordBox.Password != "11111111%")
                 viewModel.PasswordHash = CryptoHelper.CalculateMd5(passwordBox.Password);
         }
 
@@ -35,5 +37,6 @@ namespace Uruchie.ForumGadjet.View
 
             base.OnClosed(e);
         }
+
     }
 }

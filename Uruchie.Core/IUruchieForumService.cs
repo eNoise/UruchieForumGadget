@@ -7,6 +7,8 @@ namespace Uruchie.Core
 {
     public interface IUruchieForumService
     {
+        ServiceSettings Settings { get; set; }
+
         /// <summary>
         /// Add system message (log)
         /// </summary>

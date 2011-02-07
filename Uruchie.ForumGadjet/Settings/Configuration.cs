@@ -10,7 +10,6 @@ namespace Uruchie.ForumGadjet.Settings
         {
             ServiceSettings = new ServiceSettings();
         }
-
         public int RefreshInterval { get; set; }
         public bool NewPostsAreAtTheTop { get; set; }
         public string Skin { get; set; }

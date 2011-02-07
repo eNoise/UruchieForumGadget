@@ -17,12 +17,11 @@ namespace Uruchie.Core.Service
     /// </summary>
     public class UruchieForumService : IUruchieForumService
     {
-        private readonly ServiceSettings settings;
         private readonly string lastMessageFields;
 
         public UruchieForumService(ServiceSettings settings)
         {
-            this.settings = settings;
+            Settings = settings;
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -33,6 +32,8 @@ namespace Uruchie.Core.Service
             AppVersion = Assembly.GetAssembly(typeof (UruchieForumService)).GetName().Version.ToString(4);
             lastMessageFields = ReflectionHelper.GetActiveDataMembers(typeof (Post));
         }
+
+        public ServiceSettings Settings { get; set; }
 
         /// <summary>
         /// Current application version
@@ -101,8 +102,8 @@ namespace Uruchie.Core.Service
 
             string parameters = string.Format(
                 "module=forum&action=addlogmessage&app={3}&appversion={0}&logtype={1}&logmessage={2}",
-                AppVersion, logtype, message, settings.ApplicationName);
-            LoadDataAsync<SystemMessage>(settings.ApiUrl, parameters, null);
+                AppVersion, logtype, message, Settings.ApplicationName);
+            LoadDataAsync<SystemMessage>(Settings.ApiUrl, parameters, null);
         }
 
         /// <summary>
@@ -113,10 +114,10 @@ namespace Uruchie.Core.Service
             string postsQuery = string.Format("module=forum&action=lastmessages&limit={0}{1}", postLimit,
                                               string.IsNullOrEmpty(lastMessageFields) ? string.Empty : "&filter=" + lastMessageFields);
 
-            LoadDataAsync<LastMessages>(settings.ApiUrl, postsQuery, e =>
+            LoadDataAsync<LastMessages>(Settings.ApiUrl, postsQuery, e =>
                                                            {
                                                                if (e.Error == null && e.Result != null && e.Result.Posts != null)
-                                                                   e.Result.Posts = PostCollectionProcessor.PreparePosts(settings, e.Result.Posts).ToArray();
+                                                                   e.Result.Posts = PostCollectionProcessor.PreparePosts(Settings, e.Result.Posts).ToArray();
                                                                callback(e);
                                                            });
         }
@@ -129,7 +130,7 @@ namespace Uruchie.Core.Service
             var client = new WebClient();
             client.DownloadStringCompleted +=
                 (s, e) => callback(CommonHelper.TryParseVersion(e.Result));
-            client.DownloadStringAsync(new Uri(settings.UpdatesFileUrl));
+            client.DownloadStringAsync(new Uri(Settings.UpdatesFileUrl));
         }
 
         /// <summary>
@@ -137,8 +138,8 @@ namespace Uruchie.Core.Service
         /// </summary>
         public void Authenticate(Action<OperationCompletedEventArgs<AuthenticationResult>> callback)
         {
-            string query = string.Format("module=forum&action=login&username={0}&password={1}", settings.UserName, settings.PasswordHash);
-            LoadDataAsync(settings.ApiUrl, query, callback);
+            string query = string.Format("module=forum&action=login&username={0}&password={1}", Settings.UserName, Settings.PasswordHash);
+            LoadDataAsync(Settings.ApiUrl, query, callback);
         }
 
         /// <summary>
@@ -146,9 +147,14 @@ namespace Uruchie.Core.Service
         /// </summary>
         public void ChangeRating(string postId, bool positive, Action<OperationCompletedEventArgs<RatingOrKarmaChangeResult>> callback)
         {
-            string query = string.Format("module=forum&action={2}&username={0}&password={1}&postid={3}", 
-                settings.UserName, settings.PasswordHash, positive ? "plusrating" : "minusrating", postId);
-            LoadDataAsync(settings.ApiUrl, query, callback);
+            string query = string.Format("module=forum&action={2}&username={0}&password={1}&postid={3}",
+                Settings.UserName, Settings.PasswordHash, positive ? "plusrating" : "minusrating", postId);
+            LoadDataAsync<RatingOrKarmaChangeResult>(Settings.ApiUrl, query, e =>
+                                                        {
+                                                            if (e.Error == null || e.Result != null)
+                                                               e.Result.Id = postId;
+                                                            callback(e);
+                                                        });
         }
 
         /// <summary>
@@ -157,8 +163,13 @@ namespace Uruchie.Core.Service
         public void ChangeKarma(string userName, bool positive, Action<OperationCompletedEventArgs<RatingOrKarmaChangeResult>> callback)
         {
             string query = string.Format("module=forum&action={2}&username={0}&password={1}&username={3}",
-                settings.UserName, settings.PasswordHash, positive ? "pluskarma" : "minuskarma", userName);
-            LoadDataAsync(settings.ApiUrl, query, callback);
+                Settings.UserName, Settings.PasswordHash, positive ? "pluskarma" : "minuskarma", userName);
+            LoadDataAsync<RatingOrKarmaChangeResult>(Settings.ApiUrl, query, e =>
+                                                        {
+                                                            if (e.Error == null || e.Result != null)
+                                                                e.Result.Id = userName;
+                                                            callback(e);
+                                                        });
         }
     }
 }

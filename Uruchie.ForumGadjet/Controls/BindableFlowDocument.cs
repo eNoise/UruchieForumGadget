@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Media;
 using Uruchie.ForumGadjet.Converters;
 
 namespace Uruchie.ForumGadjet.Controls
@@ -25,8 +26,16 @@ namespace Uruchie.ForumGadjet.Controls
         protected void TextSourceChanged()
         {
             Blocks.Clear();
-            if (!string.IsNullOrEmpty(TextSource))
-                Blocks.Add(HtmlToFlowDocumentConverter.Convert(TextSource));
+            try
+            {
+                if (!string.IsNullOrEmpty(TextSource))
+                    Blocks.Add(HtmlToFlowDocumentConverter.Convert(TextSource));
+            }
+            catch
+            {
+                if (!string.IsNullOrEmpty(TextSource))
+                    Blocks.Add(new Paragraph(new Run(TextSource)) { Foreground = Brushes.Black });    
+            }
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using Uruchie.Core;
@@ -14,10 +16,23 @@ namespace Uruchie.ForumGadjet
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            //bool success = SkinManager.ChangeSkin(ConfigurationManager.CurrentConfiguration.Skin);
+            Logger.LogFilePath =  Path.Combine(CommonUtils.GetInstallationFolder(), "UFG_Log.txt");
+            Logger.Enabled = true;
+
+
+            bool success = SkinManager.ChangeSkin(ConfigurationManager.CurrentConfiguration.Skin);
 
             App.Current.DispatcherUnhandledException += CurrentDispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledException;
             base.OnStartup(e);
+        }
+
+        private static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var exc = e.ExceptionObject as Exception;
+            Logger.LogError(exc, "UNHANDLED EXCEPTION!");
+            if (e.ExceptionObject != null && !(e.ExceptionObject is Exception))
+                Logger.LogDebug(e.ExceptionObject.ToString());
         }
 
         private static void CurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

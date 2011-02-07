@@ -6,6 +6,7 @@ namespace Uruchie.Core.Presentation
     /// <summary>
     /// A simple implementation of an INotifyPropertyChanged interface
     /// </summary>
+    [DataContract]
     public class PropertyChangedBase : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members

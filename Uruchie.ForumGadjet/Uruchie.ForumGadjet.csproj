@@ -35,7 +35,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>37</ApplicationRevision>
+    <ApplicationRevision>44</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -70,6 +70,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\System.Windows.Interactivity.dll</HintPath>
@@ -87,9 +88,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\BindableFlowDocument.cs" />
+    <Compile Include="Controls\HtmlView.cs" />
     <Compile Include="Controls\HyperlinkControl.cs" />
     <Compile Include="Converters\BbCodesToHtmlConverter.cs" />
     <Compile Include="Converters\BooleanToVisibility.cs" />
+    <Compile Include="Converters\AvatarUrlConverter.cs" />
     <Compile Include="Converters\HtmlToXamlConvertor\HtmlCssParser.cs" />
     <Compile Include="Converters\HtmlToXamlConvertor\HtmlFromXamlConverter.cs" />
     <Compile Include="Converters\HtmlToXamlConvertor\HtmlLexicalAnalyzer.cs" />
@@ -205,6 +208,7 @@
     <Resource Include="Assets\down_minus.png" />
     <Resource Include="Assets\plus.bmp" />
     <Resource Include="Assets\minus.bmp" />
+    <Resource Include="Assets\noavatar.png" />
     <Content Include="Configuration.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -4,8 +4,8 @@
         Title="Настройки" Height="240" Width="300" 
         WindowStyle="ToolWindow" 
         WindowStartupLocation="CenterScreen" 
-        MaxHeight="313" 
-        MinHeight="313" 
+        MaxHeight="317" 
+        MinHeight="317" 
         MaxWidth="325" 
         MinWidth="325">
     <Window.Resources>
@@ -80,7 +80,8 @@
 		
         <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,4,0,4" ItemsSource="{Binding Skins}" SelectedItem="{Binding SelectedSkin, Mode=TwoWay}" />
 
-		<Button Grid.Column="1" Grid.Row="6" IsDefault="True" Content="Oк" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Margin="0,0,0,0" Command="{Binding ApplyChangesCommand}" />
+		<Button Grid.Column="1" Grid.Row="6" Content="Oк" 
+                VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Margin="0,0,0,0" Command="{Binding ApplyChangesCommand}" />
 
         <TextBox Tag="лукашенк, оппозиц, выбор," Grid.Column="1" Grid.Row="5" Margin="0,4" TextWrapping="Wrap" 
                  Style="{StaticResource watermarkableTextboxStyle}" Text="{Binding IgnorePosts, Mode=TwoWay}"/>
@@ -92,7 +93,7 @@
 
 
         <TextBlock Grid.ColumnSpan="2" Foreground="Green" Grid.Row="6" Text="* - для изменения рейтинга" 
-                   Style="{StaticResource OptionsName}"  />
+                   Style="{StaticResource OptionsName}" HorizontalAlignment="Left" />
 
     </Grid>
 </Window>

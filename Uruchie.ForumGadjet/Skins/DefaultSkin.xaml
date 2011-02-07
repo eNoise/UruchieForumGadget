@@ -2,6 +2,7 @@
 	<!-- конвертеры:-->
 	<Converters:IsNullToHiddenConverter x:Key="isNullToHiddenConverter" />
 	<Converters:BooleanToVisibility x:Key="boolToVisibilityConverter" />
+    <Converters:AvatarUrlConverter x:Key="avatarUrlConverter" />
 
 	<!-- Шаблон представления сообщения -->
 	<DataTemplate x:Key="PostDataTemplate">
@@ -106,7 +107,7 @@
 			</Grid.RowDefinitions>
 			
 			<!--TODO: заменить байндингом на версию вместо статической строки-->
-			<TextBlock Text="ForumGadget v.1.0 RC" Margin="3,0,0,0" VerticalAlignment="Center" Foreground="#FFADADAD" />
+			<TextBlock Text="ForumGadget v.1.0 RC2" Margin="3,0,0,0" VerticalAlignment="Center" Foreground="#FFADADAD" />
 
 
 			<!--показывается в верхнем правом углу, когда идет загрузка-->
@@ -124,11 +125,19 @@
 
 			<!-- список сообщений -->
 			<ListBox Margin="-3,-1,0,0" Grid.Row="1" x:Name="listbox" BorderThickness="0" VerticalAlignment="Top" ItemsSource="{Binding Posts}" SelectedItem="{Binding SelectedPost, Mode=TwoWay}" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemTemplate="{DynamicResource PostDataTemplate}" ItemContainerStyle="{StaticResource ContainerStyle}" />
-
+			<Grid Height="50" Grid.Row="1" VerticalAlignment="Top" IsHitTestVisible="False" Visibility="Hidden">
+				<Grid.Background>
+					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#BB000000" Offset="0"/>
+						<GradientStop Offset="0.509" Color="#00000000"/>
+					</LinearGradientBrush>
+				</Grid.Background>
+			</Grid>
+			
 			<!-- панелька вывода ошибки -->
 			<Grid Grid.RowSpan="2" VerticalAlignment="Bottom" Height="25" x:Name="errorContainer" Background="#B6000000" Visibility="{Binding IsError, Converter={StaticResource boolToVisibilityConverter}}">
                 <Image Source="pack://application:,,,/Uruchie.ForumGadjet;component/Assets/error.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="18" Height="18" Margin="4,0,0,0" />
-				<TextBlock Text="Не удалось обновить" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="24,0,0,2" />
+				<TextBlock Text="{Binding ErrorMessage}" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="24,0,0,2" />
 			</Grid>
 
 			<!-- индикатор загрузки -->
@@ -142,7 +151,7 @@
 			</Grid>
 
 			<!-- форма просмотра текста сообщения -->
-			<Grid Grid.RowSpan="2" x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}" Background="#FF378F41" d:IsHidden="True">
+			<Grid Grid.RowSpan="2" x:Name="postForm" Visibility="{Binding SelectedPost, Converter={StaticResource isNullToHiddenConverter}}" Background="#FF3D5C41" d:IsHidden="True">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="84" />
 					<ColumnDefinition />
@@ -158,7 +167,7 @@
 
 				<!--аватар, пока грузим по ссылке-->
 				<Border BorderThickness="0" Margin="5" Grid.RowSpan="2" Background="White" CornerRadius="3">
-					<Image Source="{Binding SelectedPost.User.AvatarUrl}" Margin="2" />
+                    <Image Source="{Binding SelectedPost.User.AvatarUrl, Converter={StaticResource avatarUrlConverter}}" Margin="2" />
 				</Border>
 
 				<TextBlock Grid.Column="1" Text="{Binding SelectedPost.Thread.Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" Foreground="White" LineStackingStrategy="BlockLineHeight" LineHeight="12" Margin="0,4,5,0" />
@@ -172,25 +181,30 @@
 						</FlowDocumentScrollViewer.Resources>
 						<Controls:BindableFlowDocument  TextSource="{Binding SelectedPost.PageText}" FontSize="12" Foreground="Black" TextAlignment="Left" FontFamily="Century" PagePadding="3" />
 					</FlowDocumentScrollViewer>
+                    <!--<Controls:HtmlView Background="White" TextSource="{Binding SelectedPost.PageText}" FontSize="12" Foreground="Black" FontFamily="Century" />-->
 				</Border>
 
 				<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,5,0,3" Text="{Binding SelectedPost.User.UserName}" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FFF9FF90" />
 
 				<!-- пейджинг (взад\вперед) -->
-				<!--Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
-					Command="{Binding SelectNextPost}" Content="&gt;" 
-					VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" />
 				<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" 
-					Command="{Binding SelectPreviousPost}" Content="&lt;" VerticalAlignment="Bottom" 
-					HorizontalAlignment="Right" Margin="0,0,40,0" /-->
+					Command="{Binding SelectNextPost}" Template="{StaticResource MenuButtonTemplate}"
+					VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,2,15">
+					<Image Source="..\Assets\nav_right_green.png" />
+				</Button>
+				<Button Grid.Column="1" Grid.Row="1" Height="20" Width="20" Template="{StaticResource MenuButtonTemplate}"
+					Command="{Binding SelectPreviousPost}" VerticalAlignment="Bottom" 
+					HorizontalAlignment="Right" Margin="0,0,23,15">
+					<Image Source="..\Assets\nav_left_green.png" />	
+				</Button>
 				
 				<StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,8,-7">
-					<Button Template="{StaticResource MenuButtonTemplate}" Foreground="White" 
+					<Button Template="{StaticResource MenuButtonTemplate}" Foreground="White" ToolTip="Насрать в рейтинг"
 						FontSize="18" FontWeight="Bold" Cursor="Hand" Command="{Binding MinusRating}">
 						-
 					</Button>
 					<TextBlock Text="{Binding SelectedPost.Rating}" Margin="5,0" FontSize="16" FontWeight="Bold" Foreground="#FFCACACA"/>
-					<Button Template="{StaticResource MenuButtonTemplate}"  Foreground="White" FontSize="16"
+					<Button Template="{StaticResource MenuButtonTemplate}"  Foreground="White" FontSize="16" ToolTip="Аффтор жжот!"
 						FontWeight="Bold" Cursor="Hand" Command="{Binding PlusRating}">
 						+
 					</Button>
@@ -199,13 +213,13 @@
 				
 
 				<TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Foreground="LightBlue"
-					TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,3">
+					TextDecorations="Underline" VerticalAlignment="Bottom" Margin="0,0,8,-2">
 					<Controls:HyperlinkControl NavigateUri="{Binding SelectedPost.PostUrl}" Foreground="LightBlue">
 						<Run Text="ссылка на тему" Foreground="LightBlue"/>
 					</Controls:HyperlinkControl>
 				</TextBlock>
 			</Grid>
-
+			
 		</Grid>
 	</ControlTemplate>
 </ResourceDictionary>
